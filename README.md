@@ -5,4 +5,4 @@
 # MMM-LiveLyrics
 This module overlays the lyrics of the song that you are curretly listening to using Genius data. It modifies the normal GeniusLyrics library and adds custom filters to have better results when getting the song data. Works in conjunction with **MMM-OnSpotify**.
 
-> This module is completly developed. But I want to add some custom overlay funtions and scroll behaviours, im rewritting some stuff. Come back later! (One week max heh)
+> This module is completly developed. But I want to add some custom overlay functions/scroll behaviours, im rewritting some stuff. Come back later! (One week max heh)
