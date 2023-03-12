@@ -1,0 +1,9 @@
+.fadein { animation: fadein 1s; } @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@media (min-width: 1200px) and (orientation: landscape) { .wide { columns: 2; }; }
+@media (min-width: 1200px) and (orientation: landscape) { .borders { border: var(--black) solid 2px !important; }; }
+.transform { transition: all 1s;}
+.hidden { display: none !important; }
+.scroll { -ms-overflow-style: none;  scrollbar-width: none; }.scroll::-webkit-scrollbar { display: none; }
+:root {
+    --w: white; --wm: #ededf1; --b: black; --bm: #212529;
+    --white: var(--w); --white-m: var(--wm); --black: var(--b); --black-m: var(--bm); --overlay: var(--bm); }

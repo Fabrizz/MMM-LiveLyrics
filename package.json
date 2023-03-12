@@ -1,0 +1,34 @@
+{
+  "name": "mmm-livelyrics",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fabrizz/MMM-LiveLyrics.git"
+  },
+  "keywords": [
+    "MagicMirror",
+    "MagicMirror2",
+    "MM2",
+    "Spotify Lyrics",
+    "Lyrics",
+    "Song Lyrics",
+    "Mirror"
+  ],
+  "author": {
+    "name": "Fabrizz",
+    "email": "contact@fabriz.co",
+    "url": "https://fabriz.co/"
+  },
+  "bugs": {
+    "url": "https://github.com/Fabrizz/MMM-LiveLyrics/issues"
+  },
+  "homepage": "https://github.com/Fabrizz/MMM-LiveLyrics#readme",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "dompurify": "^3.0.1",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.9"
+  }
+}

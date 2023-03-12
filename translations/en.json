@@ -1,0 +1,16 @@
+{
+    "ONSPOTIFY_FOUND": "MMM-OnSpotify found! (https://github.com/Fabrizz/MMM-LiveLyrics)",
+    "SEARCHING_LYRICS": "Searching lyrics...",
+    "BUTTON_HIDE": "Hide module",
+    "BUTTON_SHOW": "Show module",
+    "NO_LYRICS": "No lyrics available for this song.",
+    "CONFIG_MEDIA": "Current media from MMM-ONSP:",
+    "CONFIG_STATUS": "Last module status payload:",
+    "CONFIG_RESPONSE": "Last combined response - GENIUS:",
+    "CONFIG_TRANSLATIONS": "Translations from MM2:",
+    "CONFIG_DEBUG": "Debug | Payloads:",
+    "CONFIG_CLOSE": "Close",
+    "CONFIG_TITLE": "Debug Panel | Information",
+    "CONFIG_THEME": "Change Theme",
+    "LANGUAGE": "ENGLISH"
+}

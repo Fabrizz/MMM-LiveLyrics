@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- THIS CODE WAS RUSHED, ITS A WORKING PREVIEW -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Remote | MMM-LiveLyrics</title>
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap@5.3.0-alpha1.min.css"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="assets/vendor/bootstrap@5.3.0-alpha1.bundle.min.js"></script>
+    <script src="assets/clientLogic.js"></script>
+    <link
+      id="favicon"
+      rel="shortcut icon"
+      type="image/png"
+      href="favicon.ico"
+    />
+  </head>
+
+  <body class="transform scroll" style="background-color: var(--white-m)">
+    <div
+      class="modal modal-lg fade"
+      id="modalcfg"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="dialogTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable scroll">
+        <div
+          class="modal-content rounded-5 transform"
+          style="background-color: var(--white-m) !important"
+        >
+          <div
+            class="modal-header transform"
+            style="
+              justify-content: center !important;
+              padding-bottom: 6px !important;
+            "
+          >
+            <h1
+              class="modal-title fs-5 transform"
+              id="dialogTitle"
+              style="color: var(--black) !important"
+            >
+              Module data:
+            </h1>
+          </div>
+          <div
+            class="modal-body transform scroll"
+            style="
+              text-align: left;
+              padding: var(--bs-modal-padding) 0px var(--bs-modal-padding) 0px;
+            "
+          >
+            <a
+              href="https://fabriz.co/"
+              class="transform"
+              style="
+                color: var(--black-m) !important;
+                display: block;
+                padding: 0px var(--bs-modal-padding) 0px var(--bs-modal-padding);
+                text-decoration: none !important;
+              "
+            >
+              <div
+                style="
+                  margin-bottom: 8px;
+                  display: inline-flex;
+                  flex-flow: row wrap;
+                  align-items: center;
+                  row-gap: 0.32em;
+                  width: -webkit-fill-available;
+                  column-gap: 0.2em;
+                  justify-content: space-between;
+                "
+              >
+                <svg
+                  width="157"
+                  height="40"
+                  viewBox="0 0 157 40"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M156.667 0H0V40H156.667V0ZM19.3333 12.9999C19.3333 15.5772 17.244 17.6666 14.6667 17.6666C12.0893 17.6666 10 15.5772 10 12.9999C10 10.4226 12.0893 8.33325 14.6667 8.33325C17.244 8.33325 19.3333 10.4226 19.3333 12.9999ZM28.6667 17.6666C31.244 17.6666 33.3333 15.5772 33.3333 12.9999C33.3333 10.4226 31.244 8.33325 28.6667 8.33325C26.0893 8.33325 24 10.4226 24 12.9999C24 15.5772 26.0893 17.6666 28.6667 17.6666ZM45.8267 20.1999V12.2666H55.76V11.1333H44.4533V29.9999H45.8267V21.3333H54.4267V20.1999H45.8267ZM64.4877 13.6133L68.3277 23.1466H59.8877L63.7277 13.6266C63.7988 13.4666 63.8655 13.2933 63.9277 13.1066C63.9899 12.911 64.0477 12.7066 64.101 12.4933C64.2255 12.9288 64.3544 13.3021 64.4877 13.6133ZM71.4477 29.9999H72.501L64.781 11.1333H63.4344L55.7144 29.9999H56.7544C56.8788 29.9999 56.9855 29.9644 57.0744 29.8933C57.1633 29.8221 57.2255 29.7377 57.261 29.6399L59.4744 24.1599H68.741L70.9544 29.6399C70.9988 29.7466 71.061 29.8355 71.141 29.9066C71.221 29.9688 71.3233 29.9999 71.4477 29.9999ZM81.8683 28.9066C83.5217 28.9066 84.7706 28.551 85.615 27.8399C86.4683 27.1199 86.895 26.111 86.895 24.8133C86.895 24.2177 86.7794 23.6844 86.5483 23.2133C86.3261 22.7333 86.0017 22.3288 85.575 21.9999C85.1483 21.6621 84.6239 21.4044 84.0017 21.2266C83.3794 21.0488 82.6728 20.9599 81.8817 20.9599H77.135V28.9066H81.8683ZM77.135 12.2133V19.9599H81.215C82.0861 19.9599 82.8283 19.8488 83.4417 19.6266C84.0639 19.4044 84.5706 19.111 84.9617 18.7466C85.3617 18.3821 85.655 17.9688 85.8417 17.5066C86.0283 17.0444 86.1217 16.5688 86.1217 16.0799C86.1217 14.8088 85.7172 13.8488 84.9083 13.1999C84.1083 12.5421 82.8683 12.2133 81.1883 12.2133H77.135ZM81.1883 11.1333C82.2639 11.1333 83.1972 11.2399 83.9883 11.4533C84.7794 11.6666 85.4328 11.9821 85.9483 12.3999C86.4639 12.8088 86.8461 13.311 87.095 13.9066C87.3439 14.5021 87.4683 15.1777 87.4683 15.9333C87.4683 16.431 87.3794 16.911 87.2017 17.3733C87.0328 17.8355 86.7839 18.2621 86.455 18.6533C86.135 19.0444 85.735 19.3866 85.255 19.6799C84.7839 19.9644 84.2417 20.1821 83.6283 20.3333C85.1128 20.5466 86.2505 21.0399 87.0417 21.8133C87.8417 22.5777 88.2417 23.5866 88.2417 24.8399C88.2417 25.6399 88.0994 26.3599 87.815 26.9999C87.5306 27.6399 87.1172 28.1821 86.575 28.6266C86.0328 29.071 85.3661 29.4133 84.575 29.6533C83.7839 29.8844 82.8861 29.9999 81.8817 29.9999H75.7617V11.1333H81.1883ZM99.624 20.1599C98.9662 20.3555 98.2195 20.4533 97.384 20.4533H94.1173V12.2133H97.5706C99.2506 12.2133 100.526 12.5377 101.397 13.1866C102.277 13.8355 102.717 14.831 102.717 16.1733C102.717 16.831 102.597 17.4221 102.357 17.9466C102.117 18.471 101.766 18.9199 101.304 19.2933C100.851 19.6666 100.291 19.9555 99.624 20.1599ZM104.584 29.9999H105.757L99.264 21.8399C99.0951 21.6177 98.904 21.4399 98.6906 21.3066C99.5173 21.2088 100.26 21.0177 100.917 20.7333C101.584 20.4488 102.148 20.0844 102.611 19.6399C103.082 19.1866 103.442 18.6621 103.691 18.0666C103.94 17.471 104.064 16.8133 104.064 16.0933C104.064 14.4666 103.522 13.2355 102.437 12.3999C101.362 11.5555 99.7395 11.1333 97.5706 11.1333H92.744V29.9999H94.1173V21.4666H96.584C96.7706 21.4666 96.9262 21.4755 97.0506 21.4933C97.184 21.511 97.2951 21.5421 97.384 21.5866C97.4817 21.6221 97.5662 21.6755 97.6373 21.7466C97.7173 21.8177 97.7928 21.9021 97.864 21.9999L103.917 29.6533C104.006 29.7866 104.1 29.8799 104.197 29.9333C104.304 29.9777 104.433 29.9999 104.584 29.9999ZM110.449 29.9999H109.075V11.1333H110.449V29.9999ZM128.095 12.1466C128.219 11.951 128.282 11.7688 128.282 11.5999V11.1333H114.642V12.2666H126.455L114.455 29.0266C114.411 29.0977 114.371 29.1733 114.335 29.2533C114.308 29.3244 114.295 29.4088 114.295 29.5066V29.9999H128.188V28.8666H116.122L128.095 12.1466ZM144.352 11.5999C144.352 11.7688 144.29 11.951 144.166 12.1466L132.192 28.8666H144.259V29.9999H130.366V29.5066C130.366 29.4088 130.379 29.3244 130.406 29.2533C130.441 29.1733 130.481 29.0977 130.526 29.0266L142.526 12.2666H130.712V11.1333H144.352V11.5999ZM14.6667 31.6666C17.244 31.6666 19.3333 29.5772 19.3333 26.9999C19.3333 24.4226 17.244 22.3333 14.6667 22.3333C12.0893 22.3333 10 24.4226 10 26.9999C10 29.5772 12.0893 31.6666 14.6667 31.6666Z"
+                    fill="var(--black-m)"
+                  />
+                </svg>
+                <img
+                  src="./assets/logo-lyricsremote.png"
+                  alt=""
+                  style="height: 40px; width: auto"
+                />
+              </div>
+              <h4
+                class="lead transform"
+                style="
+                  font-weight: 400 !important;
+                  margin: 0px !important;
+                  font-size: 1.32em;
+                "
+              >
+                MMM-LiveLyrics<b
+                  style="
+                    font-weight: 100 !important;
+                    color: #878787 !important;
+                    font-size: 0.8em;
+                  "
+                >
+                  VERSION 1.0</b
+                >
+              </h4>
+              <h4
+                class="lead transform"
+                style="
+                  font-weight: 300 !important;
+                  margin: 0px !important;
+                  font-size: 1.1em;
+                  display: flex;
+                  flex-flow: row nowrap;
+                  justify-content: space-between;
+                "
+              >
+                <span style="text-decoration: underline">by Fabrizz</span>
+                <span style="color: #6b6e72 !important"></span>
+              </h4>
+            </a>
+
+            <div style="height: var(--bs-modal-padding)"></div>
+
+            <div
+              style="
+                border-top: var(--bs-modal-footer-border-width) solid
+                  var(--bs-modal-footer-border-color);
+                padding: 0px var(--bs-modal-padding) 0px var(--bs-modal-padding);
+              "
+            >
+              <div style="height: var(--bs-modal-padding)"></div>
+
+              <h4
+                style="
+                  margin: 0px 0px 0px 0px !important;
+                  padding: 0px !important;
+                  color: var(--black-m) !important;
+                "
+                id="debugLabel"
+              >
+                Debug data:
+              </h4>
+
+              <span
+                class="transform"
+                style="
+                  display: block;
+                  font-weight: bold;
+                  margin-top: 0.4rem;
+                  color: var(--black-m) !important;
+                "
+                id="statusLabel"
+                >Status:</span
+              >
+              <code
+                class="rounded-4 scroll transform"
+                style="
+                  display: block;
+                  background-color: black !important;
+                  padding: 0.6em 1em;
+                  white-space: nowrap;
+                  overflow-x: scroll;
+                "
+                id="statusDebug"
+                >[STATUS DATA SYNC ERROR]</code
+              >
+
+              <span
+                class="transform"
+                style="
+                  display: block;
+                  font-weight: bold;
+                  margin-top: 0.4rem;
+                  color: var(--black-m) !important;
+                "
+                id="mediaLabel"
+                >Media:</span
+              >
+              <code
+                class="rounded-4 scroll transform"
+                style="
+                  display: block;
+                  background-color: black !important;
+                  padding: 0.6em 1em;
+                  white-space: nowrap;
+                  overflow-x: scroll;
+                "
+                id="mediaDebug"
+                >[MEDIA DATA SYNC ERROR]</code
+              >
+
+              <span
+                class="transform"
+                style="
+                  display: block;
+                  margin-top: 0.4rem;
+                  font-weight: bold;
+                  color: var(--black-m) !important;
+                "
+                id="responseLabel"
+                >Response:</span
+              >
+              <code
+                class="rounded-4 scroll transform"
+                style="
+                  display: block;
+                  background-color: black !important;
+                  padding: 0.6em 1em;
+                  white-space: nowrap;
+                  overflow-x: scroll;
+                "
+                id="responseDebug"
+                >[RESPONSE DATA SYNC ERROR]</code
+              >
+
+              <span
+                class="transform"
+                style="
+                  display: block;
+                  margin-top: 0.4rem;
+                  font-weight: bold;
+                  color: var(--black-m) !important;
+                "
+                id="transalationLabel"
+                >Translations:</span
+              >
+              <code
+                class="rounded-4 scroll transform"
+                style="
+                  display: block;
+                  background-color: black !important;
+                  padding: 0.6em 1em;
+                  white-space: nowrap;
+                  overflow-x: scroll;
+                "
+                id="transalationDebug"
+                >[TRANSLATIONS DATA SYNC MISSING] - MM2 Frontend is not
+                loaded</code
+              >
+            </div>
+          </div>
+          <div
+            class="modal-footer"
+            style="justify-content: space-between !important"
+          >
+            <button
+              class="btn btn-outline-primary rounded-4"
+              type="button"
+              onclick="toggle()"
+              style="
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.32em;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 96 960 960"
+                style="height: 1.4em; width: 1.4em; display: block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M523 976q-84 0-157-32t-128-86.5q-55-54.5-86.5-128T120 572q0-146 93-257.5T450 176q-18 98 11 192.5T561 534q14 14 29 26.5t32 23.5q-15 7-28.5 15.5T567 618q-13-10-25.5-20.5T518 576q-63-63-96-145.5T381 259q-88 48-144.5 130.5T180 572q0 134 88.5 231T488 914q7 17 15.5 32.5T523 976ZM374 587Zm322 429-5-48q-20-6-41-17.5T616 925l-42 20-35-54 38-30q-5-23-5-41.5t5-41.5l-38-30 35-55 42 20q13-12 34-24t41-18l5-49h60l6 49q20 6 41 18t34 24l42-20 35 55-38 30q5 23 5 41.5t-5 41.5l38 30-35 54-42-20q-13 14-34 25.5T762 968l-6 48h-60Zm30-95q44 0 73-29t29-73q0-44-29-73t-73-29q-44 0-73 29t-29 73q0 44 29 73t73 29Z"
+                />
+              </svg>
+              <span id="dialogTheme">Toggle theme</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger rounded-4"
+              data-bs-dismiss="modal"
+              id="dialogClose"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="container lead fadein"
+      style="text-align: left; font-weight: 300; color: var(--black) !important"
+    >
+      <div
+        id="lyLoader"
+        style="
+          height: 4em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div class="spinner-border text-dark" role="status"></div>
+      </div>
+
+      <div
+        class="mt-3 fadein p-4 rounded-5 borders"
+        style="
+          color: white;
+          font-weight: 400;
+          background: rgb(0, 136, 168);
+          background: linear-gradient(
+            153deg,
+            rgba(0, 136, 168, 1) 0%,
+            rgba(42, 0, 121, 1) 100%
+          );
+          border: var(--black) solid 1px;
+        "
+      >
+        <span
+          class="transform px-2"
+          style="
+            color: var(--w) !important;
+            display: block;
+            padding: 0px var(--bs-modal-padding) 0px var(--bs-modal-padding);
+            text-decoration: none !important;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              margin-bottom: 8px;
+              display: inline-flex;
+              flex-flow: row wrap;
+              align-items: center;
+              row-gap: 0.32em;
+              width: -webkit-fill-available;
+              column-gap: 0.2em;
+              justify-content: space-between;
+            "
+          >
+            <svg
+              width="157"
+              height="40"
+              viewBox="0 0 157 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M156.667 0H0V40H156.667V0ZM19.3333 12.9999C19.3333 15.5772 17.244 17.6666 14.6667 17.6666C12.0893 17.6666 10 15.5772 10 12.9999C10 10.4226 12.0893 8.33325 14.6667 8.33325C17.244 8.33325 19.3333 10.4226 19.3333 12.9999ZM28.6667 17.6666C31.244 17.6666 33.3333 15.5772 33.3333 12.9999C33.3333 10.4226 31.244 8.33325 28.6667 8.33325C26.0893 8.33325 24 10.4226 24 12.9999C24 15.5772 26.0893 17.6666 28.6667 17.6666ZM45.8267 20.1999V12.2666H55.76V11.1333H44.4533V29.9999H45.8267V21.3333H54.4267V20.1999H45.8267ZM64.4877 13.6133L68.3277 23.1466H59.8877L63.7277 13.6266C63.7988 13.4666 63.8655 13.2933 63.9277 13.1066C63.9899 12.911 64.0477 12.7066 64.101 12.4933C64.2255 12.9288 64.3544 13.3021 64.4877 13.6133ZM71.4477 29.9999H72.501L64.781 11.1333H63.4344L55.7144 29.9999H56.7544C56.8788 29.9999 56.9855 29.9644 57.0744 29.8933C57.1633 29.8221 57.2255 29.7377 57.261 29.6399L59.4744 24.1599H68.741L70.9544 29.6399C70.9988 29.7466 71.061 29.8355 71.141 29.9066C71.221 29.9688 71.3233 29.9999 71.4477 29.9999ZM81.8683 28.9066C83.5217 28.9066 84.7706 28.551 85.615 27.8399C86.4683 27.1199 86.895 26.111 86.895 24.8133C86.895 24.2177 86.7794 23.6844 86.5483 23.2133C86.3261 22.7333 86.0017 22.3288 85.575 21.9999C85.1483 21.6621 84.6239 21.4044 84.0017 21.2266C83.3794 21.0488 82.6728 20.9599 81.8817 20.9599H77.135V28.9066H81.8683ZM77.135 12.2133V19.9599H81.215C82.0861 19.9599 82.8283 19.8488 83.4417 19.6266C84.0639 19.4044 84.5706 19.111 84.9617 18.7466C85.3617 18.3821 85.655 17.9688 85.8417 17.5066C86.0283 17.0444 86.1217 16.5688 86.1217 16.0799C86.1217 14.8088 85.7172 13.8488 84.9083 13.1999C84.1083 12.5421 82.8683 12.2133 81.1883 12.2133H77.135ZM81.1883 11.1333C82.2639 11.1333 83.1972 11.2399 83.9883 11.4533C84.7794 11.6666 85.4328 11.9821 85.9483 12.3999C86.4639 12.8088 86.8461 13.311 87.095 13.9066C87.3439 14.5021 87.4683 15.1777 87.4683 15.9333C87.4683 16.431 87.3794 16.911 87.2017 17.3733C87.0328 17.8355 86.7839 18.2621 86.455 18.6533C86.135 19.0444 85.735 19.3866 85.255 19.6799C84.7839 19.9644 84.2417 20.1821 83.6283 20.3333C85.1128 20.5466 86.2505 21.0399 87.0417 21.8133C87.8417 22.5777 88.2417 23.5866 88.2417 24.8399C88.2417 25.6399 88.0994 26.3599 87.815 26.9999C87.5306 27.6399 87.1172 28.1821 86.575 28.6266C86.0328 29.071 85.3661 29.4133 84.575 29.6533C83.7839 29.8844 82.8861 29.9999 81.8817 29.9999H75.7617V11.1333H81.1883ZM99.624 20.1599C98.9662 20.3555 98.2195 20.4533 97.384 20.4533H94.1173V12.2133H97.5706C99.2506 12.2133 100.526 12.5377 101.397 13.1866C102.277 13.8355 102.717 14.831 102.717 16.1733C102.717 16.831 102.597 17.4221 102.357 17.9466C102.117 18.471 101.766 18.9199 101.304 19.2933C100.851 19.6666 100.291 19.9555 99.624 20.1599ZM104.584 29.9999H105.757L99.264 21.8399C99.0951 21.6177 98.904 21.4399 98.6906 21.3066C99.5173 21.2088 100.26 21.0177 100.917 20.7333C101.584 20.4488 102.148 20.0844 102.611 19.6399C103.082 19.1866 103.442 18.6621 103.691 18.0666C103.94 17.471 104.064 16.8133 104.064 16.0933C104.064 14.4666 103.522 13.2355 102.437 12.3999C101.362 11.5555 99.7395 11.1333 97.5706 11.1333H92.744V29.9999H94.1173V21.4666H96.584C96.7706 21.4666 96.9262 21.4755 97.0506 21.4933C97.184 21.511 97.2951 21.5421 97.384 21.5866C97.4817 21.6221 97.5662 21.6755 97.6373 21.7466C97.7173 21.8177 97.7928 21.9021 97.864 21.9999L103.917 29.6533C104.006 29.7866 104.1 29.8799 104.197 29.9333C104.304 29.9777 104.433 29.9999 104.584 29.9999ZM110.449 29.9999H109.075V11.1333H110.449V29.9999ZM128.095 12.1466C128.219 11.951 128.282 11.7688 128.282 11.5999V11.1333H114.642V12.2666H126.455L114.455 29.0266C114.411 29.0977 114.371 29.1733 114.335 29.2533C114.308 29.3244 114.295 29.4088 114.295 29.5066V29.9999H128.188V28.8666H116.122L128.095 12.1466ZM144.352 11.5999C144.352 11.7688 144.29 11.951 144.166 12.1466L132.192 28.8666H144.259V29.9999H130.366V29.5066C130.366 29.4088 130.379 29.3244 130.406 29.2533C130.441 29.1733 130.481 29.0977 130.526 29.0266L142.526 12.2666H130.712V11.1333H144.352V11.5999ZM14.6667 31.6666C17.244 31.6666 19.3333 29.5772 19.3333 26.9999C19.3333 24.4226 17.244 22.3333 14.6667 22.3333C12.0893 22.3333 10 24.4226 10 26.9999C10 29.5772 12.0893 31.6666 14.6667 31.6666Z"
+                fill="var(--w)"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              style="height: 1.4em; width: 1.4em"
+            >
+              <path
+                fill="currentColor"
+                d="M21,3V15.5A3.5,3.5 0 0,1 17.5,19A3.5,3.5 0 0,1 14,15.5A3.5,3.5 0 0,1 17.5,12C18.04,12 18.55,12.12 19,12.34V6.47L9,8.6V17.5A3.5,3.5 0 0,1 5.5,21A3.5,3.5 0 0,1 2,17.5A3.5,3.5 0 0,1 5.5,14C6.04,14 6.55,14.12 7,14.34V6L21,3Z"
+              />
+            </svg>
+          </div>
+          <h4
+            class="lead transform"
+            style="
+              font-weight: 400 !important;
+              margin: 0px !important;
+              font-size: 1.32em;
+              white-space: nowrap;
+            "
+          >
+            MMM-LiveLyrics<b
+              style="
+                font-weight: 100 !important;
+                color: #878787 !important;
+                font-size: 0.8em;
+              "
+            >
+              V1.0</b
+            >
+          </h4>
+          <h4
+            class="lead transform"
+            style="
+              font-weight: 300 !important;
+              margin: 0px !important;
+              font-size: 1.1em;
+              display: flex;
+              flex-flow: row nowrap;
+              justify-content: space-between;
+            "
+          >
+            <a
+              style="
+                text-decoration: underline;
+                font-size: 0.88em;
+                color: inherit;
+              "
+              href="https://fabriz.co/"
+              >by Fabrizz</a
+            >
+            <span style="color: #6b6e72 !important"></span>
+          </h4>
+        </span>
+      </div>
+
+      <div
+        id="socket"
+        class="pt-3 fadein px-2 wide"
+        style="line-height: 1.4em; margin-bottom: 190px; font-weight: 400"
+      ></div>
+    </div>
+    <footer style="position: fixed; bottom: 0px; width: 100vw">
+      <div class="container fadein" style="max-width: 920px">
+        <div
+          class="card mb-3 mt-2 rounded-5 text-bg-dark"
+          style="background-color: var(--overlay) !important"
+        >
+          <div class="card-body">
+            <div
+              id="mainLoader"
+              style="
+                height: 4em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <div class="spinner-border text-light" role="status"></div>
+            </div>
+
+            <span id="load" class="" style="margin-top: -1rem">
+              <span
+                class="badge text-bg-primary"
+                role="alert"
+                style="font-size: 0.9em; font-weight: 400"
+              >
+                <span id="loadText" class="d-block fadein"
+                  >The Magic Mirror 2 frontend is not loaded.</span
+                >
+              </span>
+            </span>
+
+            <span id="empty" class="hidden">
+              <span
+                class="badge text-bg-primary"
+                role="alert"
+                style="font-size: 0.9em; margin-bottom: 12px; font-weight: 400"
+              >
+                <span id="emptyText" class="d-block fadein"
+                  >No lyrics found for this song.</span
+                >
+              </span>
+            </span>
+
+            <span id="none" class="hidden">
+              <span
+                class="badge text-bg-primary fadein"
+                role="alert"
+                style="font-size: 0.9em; font-weight: 400"
+              >
+                <span id="emptyText" class="d-block">Nothing is playing.</span>
+              </span>
+            </span>
+
+            <div id="cardLoader" class="hidden">
+              <div
+                style="display: flex; flex-flow: row nowrap; gap: 1em"
+                id="media"
+                class="hidden"
+              >
+                <div>
+                  <img
+                    class="rounded-4"
+                    src="./assets/spotifyGreen.png"
+                    referrerpolicy="no-referrer"
+                    style="width: 4.6em"
+                    id="img"
+                  />
+                </div>
+                <span
+                  class="scroll"
+                  style="
+                    align-self: center;
+                    max-height: 4.6em;
+                    overflow: hidden;
+                  "
+                >
+                  <h3
+                    style="
+                      text-overflow: clip;
+                      overflow: hidden;
+                      white-space: nowrap;
+                    "
+                    class="card-title"
+                    id="title"
+                  >
+                    .........
+                  </h3>
+                  <p
+                    class="card-text"
+                    style="
+                      margin-top: -8px;
+                      font-weight: 300;
+                      text-overflow: clip;
+                      overflow: hidden;
+                      white-space: nowrap;
+                    "
+                    id="subtitle"
+                  >
+                    ...........................
+                  </p>
+                </span>
+              </div>
+              <div class="d-flex mt-3 gap-2">
+                <button
+                  id="stButton"
+                  style="flex: 1"
+                  class="btn btn-primary rounded-4"
+                  type="button"
+                  onclick="module()"
+                >
+                  <span
+                    id="stShow"
+                    style="
+                      display: flex;
+                      flex-flow: row nowrap;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 0.32em;
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="48"
+                      viewBox="0 96 960 960"
+                      style="height: 1.4em; width: 1.4em; display: block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M480.118 726Q551 726 600.5 676.382q49.5-49.617 49.5-120.5Q650 485 600.382 435.5q-49.617-49.5-120.5-49.5Q409 386 359.5 435.618q-49.5 49.617-49.5 120.5Q310 627 359.618 676.5q49.617 49.5 120.5 49.5Zm-.353-58Q433 668 400.5 635.265q-32.5-32.736-32.5-79.5Q368 509 400.735 476.5q32.736-32.5 79.5-32.5Q527 444 559.5 476.735q32.5 32.736 32.5 79.5Q592 603 559.265 635.5q-32.736 32.5-79.5 32.5ZM480 856q-146 0-264-83T40 556q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169 240Q601 796 702.5 730.5 804 665 857 556q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359 316 257.5 381.5 156 447 102 556q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"
+                      />
+                    </svg>
+                    <span id="stShowT" style="flex: 1">Show module</span>
+                  </span>
+                  <span
+                    id="stHide"
+                    class="hidden"
+                    style="
+                      display: flex;
+                      flex-flow: row nowrap;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 0.32em;
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="48"
+                      viewBox="0 96 960 960"
+                      style="height: 1.4em; width: 1.4em; display: block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m629 637-44-44q26-71-27-118t-115-24l-44-44q17-11 38-16t43-5q71 0 120.5 49.5T650 556q0 22-5.5 43.5T629 637Zm129 129-40-40q49-36 85.5-80.5T857 556q-50-111-150-175.5T490 316q-42 0-86 8t-69 19l-46-47q35-16 89.5-28T485 256q143 0 261.5 81.5T920 556q-26 64-67 117t-95 93Zm58 226L648 827q-35 14-79 21.5t-89 7.5q-146 0-265-81.5T40 556q20-52 55.5-101.5T182 360L56 234l42-43 757 757-39 44ZM223 402q-37 27-71.5 71T102 556q51 111 153.5 175.5T488 796q33 0 65-4t48-12l-64-64q-11 5-27 7.5t-30 2.5q-70 0-120-49t-50-121q0-15 2.5-30t7.5-27l-97-97Zm305 142Zm-116 58Z"
+                      />
+                    </svg>
+                    <span id="stHideT" style="flex: 1">Hide module</span>
+                  </span>
+                </button>
+                <button
+                  class="btn btn-secondary rounded-4"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalcfg"
+                  type="button"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 96 960 960"
+                    style="height: 1.4em; width: 1.4em; display: block"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="m89 807-49-36 188-300 119.571 140L507 353l109 162q-16 2-31 6.5T555 532l-45-69-152.557 249L236 571 89 807Zm788 209L743 882q-21 15-45.5 23t-50.5 8q-70.833 0-120.417-49.618Q477 813.765 477 742.882 477 672 526.618 622.5q49.617-49.5 120.5-49.5Q718 573 767.5 622.583 817 672.167 817 743q0 26-8.5 50.5T786 840.448L920 973l-43 43ZM646.859 853Q693 853 725 821.141q32-31.859 32-78T725.141 665q-31.859-32-78-32T569 664.859q-32 31.859-32 78T568.859 821q31.859 32 78 32ZM721 525q-15-6-31-8t-33-4l214-337 49 36-199 313Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
