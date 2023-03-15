@@ -40,4 +40,8 @@ package-lock.json
 
 # Example responeses
 ex.json
-
+json.json
+badresponse.json
+investigate.json
+test.json
+output.json
