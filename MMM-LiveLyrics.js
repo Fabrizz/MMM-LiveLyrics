@@ -20,6 +20,11 @@ Module.register("MMM-LiveLyrics", {
     showSpotifyCodeIfEnabled: true,
     useDynamicThemeIfEnabled: true,
 
+    // TYPE * DISPLAY * MODE
+    lyricsType: ["overlay", "filled", "fullscreen"],
+    // TYPE * TIME
+    scrollBehaivour: ["divided", 2],
+
     // Internal, if you want to change event mapping
     events: {
       NOW_PLAYING: "NOW_PLAYING",
@@ -85,16 +90,16 @@ Module.register("MMM-LiveLyrics", {
   },
 
   getDom: function () {
-    if (this.upstreamNotFound)
-      // Notice: Title, Subtitle
-      return this.builder.warning("ONSPOTIFY_BROKEN", "ONSPOTIFY_STEPS");
-
     if (this.firstPaint) {
       this.firstPaint = false;
       // Notice: Time until it its not shown even if repainted
       // Useful if the module is resumend from other module
       return this.builder.loading();
     }
+
+    if (this.upstreamNotFound)
+      // Notice: Title, Subtitle
+      return this.builder.warning("ONSPOTIFY_BROKEN", "ONSPOTIFY_STEPS");
 
     return this.builder.paint(
       `${
@@ -117,7 +122,10 @@ Module.register("MMM-LiveLyrics", {
     return [this.file("css/included.css"), this.file("css/custom.css")];
   },
   getScripts: function () {
-    let files = [this.file("utils/LyricsDomBuilder.js")];
+    let files = [
+      this.file("node_modules/qrcode-svg/dist/qrcode.min.js"),
+      this.file("utils/LyricsDomBuilder.js"),
+    ];
     return files;
   },
   getTranslations: function () {

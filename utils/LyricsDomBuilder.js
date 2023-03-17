@@ -12,6 +12,8 @@ class LyricsDomBuilder {
     };
   }
 
+  /* eslint-disable no-undef */
+
   globalWrapper() {
     const wrapper = document.createElement("div");
     const version = document.createComment(
@@ -70,7 +72,7 @@ class LyricsDomBuilder {
         this.translate(subtitle),
         this.icons.warning,
         "warning",
-        this.generateQR("https://github.com/fabrizz/MMM-LiveLyrics"),
+        this.generateQR("https://github.com/fabrizz/MMM-OnSpotify#lyrics"),
       ),
     );
     return wrapper;
@@ -126,8 +128,25 @@ class LyricsDomBuilder {
 
   /* UTILS */
   generateQR(url) {
-    const a = document.createElement("div");
-    a.innerText = "QRCODE";
-    return a;
+    const container = document.createElement("div");
+    container.classList.add("qrcode");
+    if (!("QRCode" in window)) {
+      console.warn("QRCode library (vendor) not loaded correctly!");
+      container.classList.add("qrcodeError");
+      return container;
+    }
+    container.innerHTML = new QRCode({
+      content: url,
+      join: true,
+      container: "svg-viewbox",
+      xmlDeclaration: false,
+      ecl: "H",
+      color: "white",
+      background: "transparent",
+      padding: 0,
+      width: 200,
+      height: 200,
+    }).svg();
+    return container;
   }
 }
