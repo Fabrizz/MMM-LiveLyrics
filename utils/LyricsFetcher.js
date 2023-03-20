@@ -15,6 +15,8 @@ const baseApiURL = "https://api.genius.com";
 const queryRegex =
   / *\[[^\]]*]|( - )?(\d\d\d\d )?(remastered|remasterizado|remaster)( \d\d\d\d)?( version)?|\([^)]*(feat(.)?( )?|ft(.)? |with(.)? |con )[^)]*\)|(feat(.)? |ft(.)? |with(.)? |con ) (.*)| *\(( *)?\)/gi;
 
+/* TODO: Update regex to take in mind letter only titles (512) */
+
 module.exports = class SpotifyFetcher {
   constructor(payload) {
     this.apiKey = payload.apiKey;
@@ -44,23 +46,28 @@ module.exports = class SpotifyFetcher {
         // Sometimes they dont match, so we try to get the first
         // lyrics in the list, sometimes there are transalations under
         // usernames that start with Genius, so if we encounter one, we skip it.
-        // We also check taht the url is not a charts/billboard/anniversary url
+        // We also check that the url is not a charts/billboard/anniversary url
         // Check more below [getQuery()] >
         (item) => {
-          let alt = artist.replace("&", "and");
+          let altArtist = artist.replace("&", "and");
+          let altNames = item.result.artist_names.toLowerCase();
+          let altTitle = item.result.full_title.toLowerCase();
           return (
-            (item.result.artist_names.includes(artist) ||
-              item.result.artist_names.includes(alt) ||
-              item.result.full_title.includes(title)) &&
+            (altNames.includes(artist) ||
+              altNames.includes(altArtist) ||
+              altTitle.includes(title.toLowerCase())) &&
             item.type === "song" &&
-            !item.result.full_title.includes("translation") &&
-            !item.result.full_title.includes("traducción")
+            !altTitle.includes("translation") &&
+            !altTitle.includes("traducción") &&
+            !altTitle.includes("tradução") &&
+            !altTitle.includes("by spotify")
           );
         },
       );
       if (!final) {
         final = web.response.hits.find((item) => {
           let url = item.result.url.toLowerCase();
+          let altTitle = item.result.full_title.toLowerCase();
           return (
             url.includes("lyrics") &&
             !item.result.url.includes("Genius") &&
@@ -68,8 +75,10 @@ module.exports = class SpotifyFetcher {
             !url.includes("chart") &&
             !url.includes("anniversary") &&
             item.type === "song" &&
-            !item.result.full_title.includes("translation") &&
-            !item.result.full_title.includes("traducción")
+            !altTitle.includes("translation") &&
+            !altTitle.includes("traducción") &&
+            !altTitle.includes("tradução") &&
+            !altTitle.includes("by spotify")
           );
         });
       }

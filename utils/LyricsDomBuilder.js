@@ -2,7 +2,7 @@ class LyricsDomBuilder {
   constructor(pathPrefix, config, translator) {
     this.pathPrefix = pathPrefix;
     this.config = config;
-    this.translate = translator;
+    this.translate = translator; // Remove later as transalation is done on entry point
     this.root = document.querySelector(":root");
 
     this.icons = {
@@ -64,15 +64,29 @@ class LyricsDomBuilder {
     document.getElementById("LILY-LOADING").innerHTML = "";
   }
 
-  warning(title, subtitle) {
+  warning(title, subtitle, url) {
     const wrapper = this.globalWrapper();
     wrapper.appendChild(
       this.noticeCreator(
-        this.translate(title),
-        this.translate(subtitle),
+        title,
+        subtitle,
         this.icons.warning,
         "warning",
-        this.generateQR("https://github.com/fabrizz/MMM-OnSpotify#lyrics"),
+        this.generateQR(url),
+      ),
+    );
+    return wrapper;
+  }
+
+  help(title, subtitle, url) {
+    const wrapper = this.globalWrapper();
+    wrapper.appendChild(
+      this.noticeCreator(
+        title,
+        subtitle,
+        this.icons.remote,
+        "help",
+        this.generateQR(url),
       ),
     );
     return wrapper;

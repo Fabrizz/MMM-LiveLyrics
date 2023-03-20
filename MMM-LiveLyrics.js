@@ -14,11 +14,17 @@ Module.register("MMM-LiveLyrics", {
     name: "MMM-LiveLyrics",
     useDefaultSearchFormatter: true,
     useMultipleArtistInSearch: true,
-    customRegexReplace: null,
-    startHidden: true,
+    customRegexSearch: null,
+    customRegexLyrics: null,
+
+    startHidden: false,
     logSuspendResume: true,
+
     showSpotifyCodeIfEnabled: true,
     useDynamicThemeIfEnabled: true,
+
+    showConnectionQrOnLoad: true,
+    connectionQrDuration: 12,
 
     // TYPE * DISPLAY * MODE
     lyricsType: ["overlay", "filled", "fullscreen"],
@@ -71,7 +77,8 @@ Module.register("MMM-LiveLyrics", {
       apiKey: this.config.apiKey,
       useMultipleArtists: this.config.useMultipleArtistInSearch,
       useFormatter: this.config.useDefaultSearchFormatter,
-      userRegex: this.config.customRegexReplace,
+      userRegex: this.config.customRegexSearch,
+      userRegexlyrics: this.config.customRegexLyrics,
       startHidden: this.config.startHidden,
     });
 
@@ -79,6 +86,7 @@ Module.register("MMM-LiveLyrics", {
       port: this.config.port,
       path: this.config.basePath,
       https: this.config.useHttps,
+      show: this.config.showConnectionQrOnLoad,
     });
 
     setTimeout(() => {
@@ -90,16 +98,21 @@ Module.register("MMM-LiveLyrics", {
   },
 
   getDom: function () {
-    if (this.firstPaint) {
+    if (this.firstPaint && !this.lyrics) {
       this.firstPaint = false;
       // Notice: Time until it its not shown even if repainted
       // Useful if the module is resumend from other module
-      return this.builder.loading();
+      if (this.startHidden) return this.builder.loading();
+      return this.builder.globalWrapper();
     }
 
     if (this.upstreamNotFound)
       // Notice: Title, Subtitle
-      return this.builder.warning("ONSPOTIFY_BROKEN", "ONSPOTIFY_STEPS");
+      return this.builder.warning(
+        "ONSPOTIFY_BROKEN",
+        "ONSPOTIFY_STEPS",
+        "https://github.com/fabrizz/MMM-OnSpotify#lyrics",
+      );
 
     return this.builder.paint(
       `${
@@ -240,7 +253,9 @@ Module.register("MMM-LiveLyrics", {
         console.info(
           `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate(
             payload.title,
-          )} | ${payload.url}`,
+          )} | ${payload.url}, (${payload.draw ? "DRAW" : "HIDE"} | ${
+            payload.overlay ? "OVERLAY" : "SAVE"
+          })`,
           `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
           "",
           "background-color:darkcyan;color:black;border-radius:0.4em",

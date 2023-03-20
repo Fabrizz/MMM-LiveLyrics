@@ -146,7 +146,6 @@ module.exports = NodeHelper.create({
         break;
       case "GET_SERVER":
         this.serverData = this.getServerData(payload);
-        console.log(this.serverData);
         this.sendSocketNotification("SERVER_DATA", this.serverData);
         break;
       case "SYNC":
@@ -231,6 +230,7 @@ module.exports = NodeHelper.create({
         title: "UNKNOWN_ADDRESS",
         url: "http://mm-address:port/LiveLyrics",
         draw: false,
+        overlay: payload.show,
       };
 
     match = `${payload.https ? "https:" : "http"}://${match[0]}:${
@@ -241,6 +241,7 @@ module.exports = NodeHelper.create({
       title: "SUCCESS_ADDRESS",
       url: match,
       draw: true,
+      overlay: payload.show,
     };
   },
 });
