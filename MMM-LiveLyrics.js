@@ -20,15 +20,30 @@ Module.register("MMM-LiveLyrics", {
     startHidden: false,
     logSuspendResume: true,
 
-    showSpotifyCodeIfEnabled: true,
-    useDynamicThemeIfEnabled: true,
-
     showConnectionQrOnLoad: true,
     connectionQrDuration: 12,
 
-    // TYPE * DISPLAY * MODE
-    lyricsType: ["overlay", "filled", "fullscreen"],
-    // TYPE * TIME
+    lyricsStyleType: "container", // container, full, impact
+    lyricsStyleZIndex: "overlay", // overlay, belowModules, NUMBER
+    lyricsStyleContainerBackdrop: "opaque", // transparent, black, opaque, (gpu intensive >>) blurred, colorBlur, colorBlobs
+    lyricsStyleFullBackdropZIndex: "normal", // normal, belowModules, NUMBER
+    lyricsStyleTheme: "dynamicBlobs",
+    // "dynamicColors": Uses the data from OnSpotify to theme the background/foregorund colors like the Spotify Lyrics.
+    // "dynamicBlobs": Uses the data from OnSpotify to show a (gpu intensive) background using a full palette extracted from the cover art.
+    // "normal": Uses the default white/gray shades from MM2
+
+    lyricsDisplaySpacing: "mm2",
+    // - "mm2": Uses the default MM2 calc padding sizes
+    // - [T, R, B, L]: Css margins (viewport full size)
+    //   The "mm2" keyword is changed internally to the default MM2 calc Ex: ["10px", "auto", "10px", "2em"]
+    // - "px, em, etc" The space from the top (viewport full size),
+    //   usefull if you want to show the clock/weather on the top of the mirror.
+    // -------------------------------------------------------------------------------------------------------
+    // - "experimental-calcTopModules" Calculates the spacing to let the two top modules to be shown
+
+    lyricsDisplayFontName: "",
+    lyricsDisplayFontSize: "",
+
     scrollBehaivour: ["divided", 2],
 
     // Internal, if you want to change event mapping
@@ -114,21 +129,24 @@ Module.register("MMM-LiveLyrics", {
         "https://github.com/fabrizz/MMM-OnSpotify#lyrics",
       );
 
-    return this.builder.paint(
+    console.log(
       `${
         this.current
           ? JSON.stringify(this.current, null, "|  ")
-          : "CURRENT UNKNOWN"
+          : "DATA FROM ONSPOTIFY MISSING"
       } ${
         this.lyrics
           ? JSON.stringify(
-              this.lyrics.lyrics ? this.lyrics.lyrics : "LYRICS NOT FOUND",
+              this.lyrics.lyrics
+                ? this.lyrics.lyrics
+                : "LYRICS NOT FOUND ON GENIUS",
               null,
               "|  ",
             )
-          : "LYRIC DATA UNAVAILABLE"
+          : "SEARCHING | UNKNOWN PAYLOAD"
       }`,
     );
+    return this.builder.paint(this.current, this.lyrics);
   },
 
   getStyles: function () {
@@ -152,10 +170,19 @@ Module.register("MMM-LiveLyrics", {
     this.config.events[notification]?.split(" ").forEach((e) => {
       switch (e) {
         case "NOW_PLAYING":
-          this.sendSocketNotification("SYNC", payload);
+          this.sendSocketNotification("SYNC", {
+            ...payload,
+            cache: this.current && this.current.uri === payload.uri,
+          });
+          if (
+            this.enable &&
+            !(this.current && this.current.uri === payload.uri)
+          ) {
+            this.current = payload;
+            this.lyrics = null;
+            this.updateDom();
+          }
           this.lyrics = null;
-          this.current = payload;
-          if (this.enable) this.updateDom();
           break;
         case "LYRICS_TOGGLE":
           this.moduleHidden ? this.show() : this.hide();
@@ -310,12 +337,13 @@ Module.register("MMM-LiveLyrics", {
     }
   },
   resume: function () {
-    if (this.enable || this.upstreamNotFound) this.updateDom();
+    if (this.upstreamNotFound) this.updateDom();
     this.moduleHidden = false;
     this.sendSocketNotification("STATUS", {
       moduleHidden: false,
       upstream: this.masterFound,
     });
+
     this.sendNotification("GET_PLAYING");
 
     if (this.config.logSuspendResume)

@@ -164,8 +164,7 @@ module.exports = NodeHelper.create({
             dataType: "MEDIA",
             empty: false,
           });
-          if (!payload.same && !this.currentStatus.moduleHidden)
-            this.fetchGenius(payload);
+          if (!this.currentStatus.moduleHidden) this.fetchGenius(payload);
         }
         if (payload.playerIsEmpty) {
           this.currentData = { empty: true, dataType: "MEDIA" };
@@ -189,26 +188,30 @@ module.exports = NodeHelper.create({
 
   fetchGenius: async function (payload) {
     try {
-      this.sendSocketNotification("SEARCHING", payload);
-      let data = await this.fetcher.getLyrics(
-        payload.name,
-        payload.artists,
-        payload.artist,
-      );
+      // if (payload.cache) return this.sendSocketNotification("LYRICS", this.currentLyrics);
+      let data = payload.cache
+        ? this.currentLyrics
+        : await this.fetcher.getLyrics(
+            payload.name,
+            payload.artists,
+            payload.artist,
+          );
       if (data instanceof Error)
         return this.sendSocketNotification("LYRICS", { error: true });
       if (this.currentData.title === data.title) {
         this.currentLyrics = {
+          ...data,
           empty: false,
           dataType: "LYRICS",
-          ...data,
+          isFromCache: payload.cache,
         };
-        this.sendSocketNotification("LYRICS", data);
+        this.sendSocketNotification("LYRICS", this.currentLyrics);
       }
       eventStream.emit("SSE", {
+        ...data,
         empty: false,
         dataType: "LYRICS",
-        ...data,
+        isFromCache: payload.cache,
       });
     } catch (e) {
       console.error(
