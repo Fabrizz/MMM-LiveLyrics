@@ -1,7 +1,5 @@
 {
     "ONSPOTIFY_FOUND": "MMM-OnSpotify found! (https://github.com/Fabrizz/MMM-OnSpotify)",
-    "ONSPOTIFY_BROKEN": "MMM-OnSpotify no encotrado!",
-    "ONSPOTIFY_STEPS": "Instala OnSpotify o actualiza/arregla la instalación",
     "SEARCHING_LYRICS": "Buscando letra...",
     "BUTTON_HIDE": "Ocultar módulo",
     "BUTTON_SHOW": "Mostrar módulo",
