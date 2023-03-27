@@ -1,5 +1,7 @@
 {
     "ONSPOTIFY_FOUND": "MMM-OnSpotify found! (https://github.com/Fabrizz/MMM-OnSpotify)",
+    "ONSPOTIFY_BROKEN": "MMM-OnSpotify not found!",
+    "ONSPOTIFY_STEPS": "Install OnSpotify or update/fix the installation",
     "SEARCHING_LYRICS": "Searching lyrics...",
     "BUTTON_HIDE": "Hide module",
     "BUTTON_SHOW": "Show module",
