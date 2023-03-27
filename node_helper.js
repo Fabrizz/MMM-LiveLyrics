@@ -146,7 +146,6 @@ module.exports = NodeHelper.create({
         break;
       case "GET_SERVER":
         this.serverData = this.getServerData(payload);
-        console.log(this.serverData);
         this.sendSocketNotification("SERVER_DATA", this.serverData);
         break;
       case "SYNC":
