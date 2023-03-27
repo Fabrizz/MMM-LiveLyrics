@@ -55,8 +55,7 @@ module.exports = class SpotifyFetcher {
           return (
             (altNames.includes(artist) ||
               altNames.includes(altArtist) ||
-              altTitle.includes(title.toLowerCase()) ||
-              artists.includes(item.result.artist_names)) &&
+              altTitle.includes(title.toLowerCase())) &&
             item.type === "song" &&
             !altTitle.includes("translation") &&
             !altTitle.includes("traducción") &&
