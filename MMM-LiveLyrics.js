@@ -76,6 +76,9 @@ Module.register("MMM-LiveLyrics", {
     this.enable = false;
     this.upstreamConfig = null;
     this.upstreamNotFound = false;
+    this.server = null;
+    this.helpOverlay = false;
+    this.helpOverlayTimeout = null;
 
     ///////////////////////
     this.version = "1.0.0";
@@ -124,9 +127,16 @@ Module.register("MMM-LiveLyrics", {
     if (this.upstreamNotFound)
       // Notice: Title, Subtitle
       return this.builder.warning(
-        "ONSPOTIFY_BROKEN",
-        "ONSPOTIFY_STEPS",
+        this.translate("ONSPOTIFY_BROKEN"),
+        this.translate("ONSPOTIFY_STEPS"),
         "https://github.com/fabrizz/MMM-OnSpotify#lyrics",
+      );
+
+    if (this.helpOverlay)
+      return this.builder.help(
+        this.translate(this.server.title),
+        this.server.url,
+        this.server.url,
       );
 
     console.log(
@@ -277,17 +287,16 @@ Module.register("MMM-LiveLyrics", {
             });
         break;
       case "SERVER_DATA":
-        console.info(
-          `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate(
-            payload.title,
-          )} | ${payload.url}, (${payload.draw ? "DRAW" : "HIDE"} | ${
-            payload.overlay ? "OVERLAY" : "SAVE"
-          })`,
-          `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
-          "",
-          "background-color:darkcyan;color:black;border-radius:0.4em",
-          "",
-        );
+        this.server = payload;
+        if (payload.overlay) {
+          this.helpOverlay = true;
+          this.updateDom();
+          console.log(payload);
+          this.helpOverlayTimeout = setTimeout(() => {
+            this.helpOverlay = false;
+            this.updateDom();
+          }, this.config.connectionQrDuration * 1000);
+        }
         break;
       case "SET":
         switch (payload) {
