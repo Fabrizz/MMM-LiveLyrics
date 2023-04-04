@@ -135,6 +135,7 @@ module.exports = NodeHelper.create({
           ...this.currentStatus,
           dataType: "STATUS",
           frontendAvailable: true,
+          blockButtons: payload.hidesAutomatically,
         });
 
         this.fetcher = new LyricsFetcher(payload);

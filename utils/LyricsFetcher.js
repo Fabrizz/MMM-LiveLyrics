@@ -10,6 +10,7 @@
 // Use node fetch as most MM2 installs use older node
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const LILYREGEX = require("../LILYREGEX");
 
 const baseApiURL = "https://api.genius.com";
 const queryRegex =
@@ -20,14 +21,22 @@ const queryRegex =
 module.exports = class SpotifyFetcher {
   constructor(payload) {
     this.apiKey = payload.apiKey;
+    this.regex = LILYREGEX;
+
     this.userRegex =
-      // Check user defined regExp
-      payload.userRegex instanceof RegExp
-        ? new RegExp(payload.userRegex, "gi")
-        : null;
+      this.regex.search instanceof RegExp ? this.regex.search : null;
+    this.userRegexlyrics =
+      this.regex.lyrics instanceof RegExp ? this.regex.lyrics : null;
+
     this.useFormatter = payload.useFormatter;
     this.useMultipleArtists = payload.useMultipleArtists;
-    if (payload.userRegex && !(payload.userRegex instanceof RegExp))
+
+    if (payload.userRegex && !(this.userRegex instanceof RegExp))
+      console.error(
+        "\x1b[41m%s\x1b[0m",
+        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
+      );
+    if (payload.userRegexlyrics && !(this.userRegexlyrics instanceof RegExp))
       console.error(
         "\x1b[41m%s\x1b[0m",
         "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
@@ -35,7 +44,6 @@ module.exports = class SpotifyFetcher {
   }
 
   async getLyrics(title, artists, artist) {
-    console.log("GETTING LYRICS");
     try {
       let payload = { start: Date.now(), title, artists };
 
@@ -49,37 +57,33 @@ module.exports = class SpotifyFetcher {
         // We also check that the url is not a charts/billboard/anniversary url
         // Check more below [getQuery()] >
         (item) => {
-          let altArtist = artist.replace("&", "and");
+          let altArtist = artist.replace("&", "and").toLowerCase();
           let altNames = item.result.artist_names.toLowerCase();
-          let altTitle = item.result.full_title.toLowerCase();
           return (
             (altNames.includes(artist) ||
               altNames.includes(altArtist) ||
-              altTitle.includes(title.toLowerCase()) ||
+              item.result.full_title
+                .toLowerCase()
+                .includes(title.toLowerCase()) ||
               artists.includes(item.result.artist_names)) &&
             item.type === "song" &&
-            !altTitle.includes("translation") &&
-            !altTitle.includes("traducción") &&
-            !altTitle.includes("tradução") &&
-            !altTitle.includes("by spotify")
+            !item.result.full_title.match(
+              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes)/gi,
+            )
           );
         },
       );
       if (!final) {
         final = web.response.hits.find((item) => {
           let url = item.result.url.toLowerCase();
-          let altTitle = item.result.full_title.toLowerCase();
           return (
             url.includes("lyrics") &&
-            !item.result.url.includes("Genius") &&
-            !url.includes("billboard") &&
-            !url.includes("chart") &&
-            !url.includes("anniversary") &&
             item.type === "song" &&
-            !altTitle.includes("translation") &&
-            !altTitle.includes("traducción") &&
-            !altTitle.includes("tradução") &&
-            !altTitle.includes("by spotify")
+            !item.result.url.includes("Genius") &&
+            !url.match(/(lyrics|billboard|chart|anniversary)/gi) &&
+            !item.result.full_title.match(
+              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes)/gi,
+            )
           );
         });
       }
@@ -111,6 +115,9 @@ module.exports = class SpotifyFetcher {
       }
       lyrics ? (lyrics = lyrics.trim()) : (lyrics = null);
 
+      if (this.userRegexlyrics && lyrics)
+        lyrics = lyrics.replace(this.userRegexlyrics, "");
+
       const end = Date.now();
       return {
         ...payload,
@@ -123,7 +130,11 @@ module.exports = class SpotifyFetcher {
         options: web,
       };
     } catch (error) {
-      console.log(error);
+      console.error(
+        "\x1b[41m%s\x1b[0m",
+        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
+        error,
+      );
     }
   }
 
