@@ -192,10 +192,31 @@
 .LILY-Base .main .sub .view .container .ly br {
     color: red;
 }
+
+.LILY-Base .main .sub .view .banner {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    margin: 2em 2em 0.6em 2em;
+    align-items: center;
+    gap: 1em;
+    padding: 1em;
+    border-radius: 1.8em;
+    color: var(--LILY-INFO-BGCOLOR);
+    transition: all 1s;
+    flex: 1;
+}
+.LILY-Base .main .sub .view .banner .nolyrics {
+
+}
+.LILY-Base .main .sub .view .banner .svg {
+    height: 2em;
+    width: 2em;
+}
+
 /* Optional styles when there is no lyrics */
 .LILY-Base .main .sub .view .extended { flex-flow: column nowrap; padding: 2em 2em 1.8em 2em; align-items: center; margin: 0.6em 2em 2em 2em; text-align: center; }
 .LILY-Base .main .sub .view .extended .cover { height: 8em; min-height: 8em; width: 8em; min-width: 8em; }
-.LILY-Base .main .sub .view .nolyrics { display: flex; flex-flow: column nowrap; justify-content: center; margin: 2em 2em 0.6em 2em; align-items: center; gap: 1em; padding: 1em; border-radius: 1.8em; color: var(--LILY-INFO-BGCOLOR); transition: all 1s; flex: 1; }
 .LILY-Base .main .sub .view .extended .info .subtitle { font-size: 1.66em; }
 .LILY-Base .main .sub .view .extended .info .title { font-size: 2.2em; }
 
@@ -479,17 +500,17 @@
 
 
 @media (orientation: landscape) {
-  .LILY-Base .main .sub .view {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view {
     flex-flow: row nowrap;
   }
-  .LILY-Base .main .sub .view .container {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .container {
     margin: 2.22em 0em 2.22em 2.22em;
     /* margin: 2em 2em 2em 0px; order: 2; */
   }
-  .LILY-Base .main .sub .view .container .ly {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .container .ly {
     font-size: 1.8em;
   }
-  .LILY-Base .main .sub .view .media {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media {
     flex-flow: column nowrap;
     justify-content: center;
     margin: 1.8em 1.8em 1.8em 0px;
@@ -500,11 +521,11 @@
     transition: all 1s;
     padding: 2em;
   }
-  .LILY-Base .main .sub .view .media .info {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info {
     flex: none;
     max-width: 97%;
   }
-  .LILY-Base .main .sub .blobs .grid {
+  .LILY-Base .main.internal-sidebyside-normal .sub .blobs .grid {
     grid-template-areas:
     "V V V V V V V . . . . DV DV DV DV DV"
     "V V V V V V V . . . . DV DV DV DV DV"
@@ -523,28 +544,28 @@
     "LV LV LV LV . . . . DM DM DM DM DM DM DM DM"
     "LV LV LV LV . . . . DM DM DM DM DM DM DM DM";
   }
-  .LILY-Base .main .sub .view .nolyrics {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .nolyrics {
     margin: 2em 0em 2em 2.2em;
     background-color: transparent;
   }
-  .LILY-Base .main .sub .view .media .cover {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media .cover {
     height: 18em;
     min-height: 18em;
     width: 18em;
     min-width: 18em;
     border-radius: 1em;
   }
-  .LILY-Base .main .sub .view .media .info {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info {
     text-align: center;
   }
-  .LILY-Base .main .sub .view .media .info .subtitle {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info .subtitle {
     font-size: 1.8em;
   }
-  .LILY-Base .main .sub .view .media .info .title {
+  .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info .title {
     font-size: 2.36em;
   }
-  .LILY-Base .internal-use-blackout .backdrop .grid,
-.LILY-Base .internal-use-blackout .sub .blobs .grid {
+  .LILY-Base .internal-sidebyside-normal.internal-use-blackout .backdrop .grid,
+.LILY-Base .internal-sidebyside-normal.internal-use-blackout .sub .blobs .grid {
         grid-template-areas: 
     "BD BD BD BD BD BD BD BD BD BD BD BD BD BD BD BD"
     "BD BD BD BD BD BD BD BD BD BD BD BD BD BD BD BD"

@@ -18,6 +18,7 @@ Module.register("MMM-LiveLyrics", {
     logSuspendResume: true,
     showConnectionQrOnLoad: false,
     connectionQrDuration: 5,
+    sideBySideOnLandscape: false,
 
     lyricsFillType: "containerCalcTopModules", // container, full, containerCalcTopModules, fullCalcTopModules
     lyricsContainerBackdropStyle: "black", // black, opaque, blurred, transparent
@@ -61,11 +62,11 @@ Module.register("MMM-LiveLyrics", {
     // to diffuminate the border of the screen better with the rest of the mirror that
     // is not covered with the display. If for some reason this is not enough, you
     // can change the opacity and the element positioning changing the grid-template.
-    scrollType: "blocks",
+    scrollStrategy: "byAnimationFrame",
     scrollUpdateEvery: 3,
 
-    animateColorTransitions: true,
-    animateModuleTransitions: true,
+    animateColorTransitions: true /* -------------------------------- */,
+    animateModuleTransitions: true /* -------------------------------- */,
 
     // Internal, if you want to change event mapping
     events: {
@@ -146,6 +147,9 @@ Module.register("MMM-LiveLyrics", {
       this.upstreamNotFound = true;
       this.moduleHidden ? this.show() : this.updateDom();
     }, 6000);
+
+    // setInterval(() => this.builder.scroller_bySections(), 4000);
+    this.selectScrollType(this.config.scrollStrategy);
   },
 
   getDom: function () {
@@ -223,6 +227,8 @@ Module.register("MMM-LiveLyrics", {
             ? (this.nowPlaying = false)
             : (this.nowPlaying = true);
 
+          if (payload.playerIsEmpty) this.builder.setEmpty();
+
           this.sendSocketNotification("SYNC", {
             ...payload,
             cache: this.current && this.current.uri === payload.uri,
@@ -272,7 +278,12 @@ Module.register("MMM-LiveLyrics", {
               });
           this.upstreamConfig = payload;
 
-          if (payload.version && Number(payload.version[0]) < 2)
+          /* Check for versions < than 2.2.X */
+          if (
+            payload.version &&
+            Number(payload.version[0]) <= 2 &&
+            Number(payload.version[3]) <= 2
+          )
             this.onSpotifyVersionMismatch = payload.version;
 
           if (this.dynamicTheme && !payload.directColorData) {
@@ -435,6 +446,23 @@ Module.register("MMM-LiveLyrics", {
       );
   },
 
+  selectScrollType(name) {
+    if (typeof name !== "string") name = "";
+    switch (name.toLowerCase()) {
+      case "byanimationframe":
+        this.builder.scroller_byAnimationFrame();
+        break;
+      case "none":
+        return;
+      default:
+        this.builder.scroller_bySections(
+          this.config.scrollUpdateEvery
+            ? this.config.scrollUpdateEvery * 1000
+            : 3000,
+        );
+        break;
+    }
+  },
   userHide: function () {
     this.hide(1000);
   },

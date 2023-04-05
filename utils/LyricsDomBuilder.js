@@ -5,6 +5,13 @@ class LyricsDomBuilder {
     this.config = config;
     this.root = document.querySelector(":root");
     this.backgroundColors = ["V", "DV", "LV", "M", "DM", "LM"];
+    this.lyStatus = false;
+
+    /* ONSPOTIFY & LIVELYRICS */
+    this.PLAYERPROGRESS = "VSNO-TARGET-PROGRESS";
+    this.LYRICSSCROLLABLE = "LILY-LYRICS";
+    this.LYRICSCONTAINER = "LILY-CONTAINER";
+    /* ---------------------- */
 
     this.icons = {
       icon: "M21,3V15.5A3.5,3.5 0 0,1 17.5,19A3.5,3.5 0 0,1 14,15.5A3.5,3.5 0 0,1 17.5,12C18.04,12 18.55,12.12 19,12.34V6.47L9,8.6V17.5A3.5,3.5 0 0,1 5.5,21A3.5,3.5 0 0,1 2,17.5A3.5,3.5 0 0,1 5.5,14C6.04,14 6.55,14.12 7,14.34V6L21,3Z",
@@ -19,7 +26,7 @@ class LyricsDomBuilder {
 
     this.types = {
       style: `internal-style-${this.config.lyricsFillType.toLowerCase()}`,
-      scroll: `internal-scroll-${this.config.scrollType.toLowerCase()}`,
+      scroll: `internal-scroll-${this.config.scrollStrategy.toLowerCase()}`,
       theme: `internal-theme-${this.config.lyricsStyleTheme.toLowerCase()}`,
     };
 
@@ -172,6 +179,9 @@ class LyricsDomBuilder {
       this.config.blurToBlackOnFull
         ? "internal-use-blackout"
         : "internal-no-blackout",
+      this.config.sideBySideOnLandscape
+        ? "internal-sidebyside-normal"
+        : "internal-sidebyside-disabled",
       current
         ? lyrics
           ? lyrics.lyrics
@@ -185,6 +195,12 @@ class LyricsDomBuilder {
           : "upstream-playing"
         : "upstream-unknown",
     );
+
+    if (current && lyrics && lyrics.lyrics) {
+      this.lyStatus = true;
+    } else {
+      this.lyStatus = false;
+    }
 
     const backdrop = document.createElement("div");
     backdrop.classList.add("backdrop");
@@ -245,7 +261,7 @@ class LyricsDomBuilder {
         const nolyrics = document.createElement("div");
         nolyrics.classList.add("nolyrics");
         const constructor = document.createElement("div");
-        constiner.classList.add("container");
+        constructor.classList.add("banner");
 
         const ico = document.createElementNS(
           "http://www.w3.org/2000/svg",
@@ -262,7 +278,8 @@ class LyricsDomBuilder {
         ico.appendChild(path);
         nolyrics.appendChild(ico);
 
-        view.appendChild(nolyrics);
+        constructor.appendChild(nolyrics);
+        view.appendChild(constructor);
         view.appendChild(media);
         blobs.appendChild(grid);
         sub.appendChild(blobs);
@@ -408,35 +425,82 @@ class LyricsDomBuilder {
     this.root.style.setProperty("--LILY-CALC-GLOBAL-EM", `${emsz}px`);
     this.root.style.setProperty("--LILY-CALC-MODULES-MX", `${all}px`);
   }
-}
-/*
-  scrollLyrics: (scroller) => {
-    if (!scroller) return;
-    let container = document.getElementById("sp-lry-box");
-    let lyrics = document.getElementById("sp-lry-txt");
-    let progressBar = document.getElementById("sp_nfo_progress");
 
-    let containerSize = container.clientHeight;
-    let lyricsSize = container.scrollHeight;
+  setEmpty() {
+    this.lyStatus = false;
+  }
 
-    if (containerSize === lyricsSize || lyricsSize < containerSize) return;
-    let currentMs = parseInt(progressBar.getAttribute("value")) ?? 1;
-    let totalMS = parseInt(progressBar.getAttribute("max")) ?? 1;
-    let playingProgress = Math.round((currentMs / totalMS) * 100);
-    let changeEvery = Math.round(100 / (lyricsSize / containerSize));
-    let multiplyBy = Math.trunc(playingProgress / changeEvery);
-    let totalTimes = Math.ceil(100 / changeEvery);
+  scrollerSetAction() {}
 
-    console.log(
-      `SIZING: ${containerSize}px/${lyricsSize}px (${Math.round((lyricsSize / totalTimes) * 10) / 10
-      }px) | PLAY: ${playingProgress}%, moves every: ${changeEvery}% | CURRENT: ${multiplyBy} (${totalTimes}) (${(Math.round((lyricsSize / totalTimes) * 10) / 10) * multiplyBy
-      })`
+  scroller_byAnimationFrame() {
+    const updateProgress = (t) => {
+      if (!this.lyStatus) return;
+      const container = document.getElementById(this.LYRICSCONTAINER);
+      const extProgress = document.getElementById(this.PLAYERPROGRESS);
+      if (!extProgress || !container) return;
+      const now = parseInt(extProgress.getAttribute("now")) ?? 1;
+      const max = parseInt(extProgress.getAttribute("max")) ?? 1;
+      const prs = now / max;
+
+      if (prs !== this.progress) {
+        this.progress = prs;
+        this._t = t;
+        container.scrollTop =
+          (container.scrollHeight - container.clientHeight) * this.progress;
+      } else {
+        let p = (now + (t - this._t)) / max;
+        container.scrollTop =
+          (container.scrollHeight - container.clientHeight) * p;
+      }
+    };
+
+    const scrollEffect = (t) => {
+      window.requestAnimationFrame(scrollEffect);
+      updateProgress(t);
+    };
+    scrollEffect(0);
+  }
+
+  scroller_bySections() {
+    if (!this.lyStatus) return;
+    const container = document.getElementById(this.LYRICSCONTAINER);
+    const extProgress = document.getElementById(this.PLAYERPROGRESS);
+    if (!extProgress || !container) return;
+    const progress = {
+      now: parseInt(extProgress.getAttribute("now")) ?? 1,
+      max: parseInt(extProgress.getAttribute("max")) ?? 1,
+    };
+
+    if (
+      container.clientHeight === container.scrollHeight ||
+      container.scrollHeight < container.clientHeight
+    )
+      return;
+
+    const currentProgress = Math.round((progress.now / progress.max) * 100);
+    let changeEvery = Math.round(
+      100 / (container.scrollHeight / container.clientHeight),
     );
 
+    // NEXT UPDATE: Just calc tha middle of every "lyric fragment" and use it instead of the
+    // direct divison of the max size
+
+    if (changeEvery > 28 || changeEvery > 30) changeEvery = 28;
+    if (changeEvery > 40 || changeEvery > 50) changeEvery = 40;
+    if (changeEvery > 86) changeEvery = 70;
+
+    const multiplier = Math.trunc(currentProgress / changeEvery);
+    const numberOfTimes = Math.ceil(100 / changeEvery);
+
     container.scrollTo({
-      top: (Math.round((lyricsSize / totalTimes) * 10) / 10) * multiplyBy,
-      behavior: "smooth"
+      top:
+        (Math.round((container.scrollHeight / numberOfTimes) * 10) / 10) *
+        multiplier,
+      behavior: "smooth",
     });
+
+    console.log(
+      `Sizes: ${container.scrollHeight}/${container.clientHeight}px | Current: ${currentProgress}% [${multiplier}/${numberOfTimes}] (${changeEvery}%)`,
+    );
   }
-});
-*/
+}
