@@ -68,7 +68,7 @@ module.exports = class SpotifyFetcher {
               artists.includes(item.result.artist_names)) &&
             item.type === "song" &&
             !item.result.full_title.match(
-              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes)/gi,
+              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes|genius of...)/gi,
             )
           );
         },
@@ -82,7 +82,7 @@ module.exports = class SpotifyFetcher {
             !item.result.url.includes("Genius") &&
             !url.match(/(lyrics|billboard|chart|anniversary)/gi) &&
             !item.result.full_title.match(
-              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes)/gi,
+              /(translation|traducci[óo]n|traduç[ãa]o|by spotify|sencillos del mes|genius of...)/gi,
             )
           );
         });

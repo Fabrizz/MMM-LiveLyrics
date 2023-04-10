@@ -22,10 +22,10 @@ Module.register("MMM-LiveLyrics", {
 
     lyricsFillType: "containerCalcTopModules", // container, full, containerCalcTopModules, fullCalcTopModules
     lyricsContainerBackdropStyle: "black", // black, opaque, blurred, transparent
-    lyricsStyleTheme: "DynamicblobsFull",
+    lyricsStyleTheme: "dynamicblobsFull",
     // "dynamicColors": Uses the data from OnSpotify to theme the background/foregorund colors like the Spotify Lyrics.
     // "dynamicBlobs": Uses the data from OnSpotify to show a (gpu intensive) background using a full palette extracted from the cover art.
-    // "DynamicblobsFull": Uses the data from OnSpotify to show a (gpu intensive) background using a full palette extracted from the cover art. (Full viewport size)
+    // "dynamicblobsFull": Uses the data from OnSpotify to show a (gpu intensive) background using a full palette extracted from the cover art. (Full viewport size)
     // "normal": Uses the default white/gray shades from MM2
 
     lyricsCustomFixedDimentions: false,
@@ -62,11 +62,10 @@ Module.register("MMM-LiveLyrics", {
     // to diffuminate the border of the screen better with the rest of the mirror that
     // is not covered with the display. If for some reason this is not enough, you
     // can change the opacity and the element positioning changing the grid-template.
-    scrollStrategy: "byAnimationFrame",
+    scrollStrategy: "bySections",
     scrollUpdateEvery: 3,
 
-    animateColorTransitions: true /* -------------------------------- */,
-    animateModuleTransitions: true /* -------------------------------- */,
+    useAnimations: true,
 
     // Internal, if you want to change event mapping
     events: {
@@ -105,12 +104,10 @@ Module.register("MMM-LiveLyrics", {
 
     /* Idk why using a simple .contains() does not work as its a string, but hey, I want to sleep */
     this.dynamicTheme =
-      this.config.lyricsStyleTheme.toLowerCase() === "dynamicColors" ||
-      this.config.lyricsStyleTheme.toLowerCase() === "dynamicBlobs" ||
-      this.config.lyricsStyleTheme.toLowerCase() === "DynamicblobsFull";
+      this.config.lyricsStyleTheme.toLowerCase() === "dynamiccolors" ||
+      this.config.lyricsStyleTheme.toLowerCase() === "dynamicblobs" ||
+      this.config.lyricsStyleTheme.toLowerCase() === "dynamicblobsfull";
 
-    if (this.config.hideStrategy)
-      this.config.hideStrategy = this.config.hideStrategy.toLowerCase();
     if (this.config.hideStrategy)
       this.config.hideStrategy = this.config.hideStrategy.toLowerCase();
     if (this.config.hideStrategy === "mm2") this.config.startHidden = true;
@@ -127,7 +124,7 @@ Module.register("MMM-LiveLyrics", {
     );
 
     this.sendSocketNotification("SET_CREDENTIALS", {
-      apiKey: this.config.apiKey,
+      apiKey: this.config.accessToken,
       useMultipleArtists: this.config.useMultipleArtistInSearch,
       useFormatter: this.config.useDefaultSearchFormatter,
       startHidden: this.config.startHidden,
@@ -148,7 +145,6 @@ Module.register("MMM-LiveLyrics", {
       this.moduleHidden ? this.show() : this.updateDom();
     }, 6000);
 
-    // setInterval(() => this.builder.scroller_bySections(), 4000);
     this.selectScrollType(this.config.scrollStrategy);
   },
 
@@ -209,7 +205,7 @@ Module.register("MMM-LiveLyrics", {
       switch (e) {
         case "NOW_PLAYING":
           if (payload.playerIsEmpty === true) {
-            if (this.config.hideSpotifyModule)
+            if (this.config.hideSpotifyModule && !this.moduleHidden)
               this.sendNotification("ONSPOTIFY_SHOW");
             if (this.config.hideStrategy === "mm2") this.hide();
           }
@@ -217,7 +213,7 @@ Module.register("MMM-LiveLyrics", {
             payload.playerIsEmpty === false &&
             (this.moduleHidden || this.firstSync)
           ) {
-            if (this.config.hideSpotifyModule)
+            if (this.config.hideSpotifyModule && this.moduleHidden)
               this.sendNotification("ONSPOTIFY_HIDE");
             if (this.config.hideStrategy === "mm2") this.show();
             this.firstSync = false;
@@ -326,8 +322,7 @@ Module.register("MMM-LiveLyrics", {
           if (this.config.startHidden) {
             setTimeout(
               () => {
-                if (!this.nowPlaying && this.config.hideStrategy === "mm2")
-                  this.hide();
+                if (!this.nowPlaying && this.config.hideStrategy) this.hide();
                 this.enable = true;
                 if (!this.config.showConnectionQrOnLoad)
                   this.builder.hideLoading();
@@ -403,6 +398,8 @@ Module.register("MMM-LiveLyrics", {
       upstream: this.masterFound,
     });
     this.lyrics = null;
+
+    this.sendNotification("ONSPOTIFY_SHOW");
 
     if (this.config.logSuspendResume && !this.firstSuspend)
       console.info(

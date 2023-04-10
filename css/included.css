@@ -49,6 +49,8 @@
     --LILY-CALC-MODULES-RT: 0px;
     --LILY-CALC-MODULES-EM: 0px;
     --LILY-CALC-MODULES-MX: 0px;
+
+    --LILY-MAIN-TRANSITIONS: all 1500ms;
 }
 
 /************************************************************* GLOBAL */
@@ -72,7 +74,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    transition: all 1s;
+    transition: var(--LILY-MAIN-TRANSITIONS);
 }
 .LILY-Base .main .backdrop .grid {
     display: none;
@@ -90,7 +92,7 @@
     border-radius: 3em;
     position: absolute;
     overflow: hidden;
-    transition: all 1s;
+    transition: var(--LILY-MAIN-TRANSITIONS);
 }
 .LILY-Base .main .sub .view {
     height: 100%;
@@ -146,7 +148,10 @@
     border-radius: 1.8em;
     background-color: var(--LILY-INFO-BGCOLOR);
     color: var(--LILY-INFO-COLOR);
-    transition: all 1s;
+    transition: var(--LILY-MAIN-TRANSITIONS);
+    /*animation-name: slide;
+    animation-duration: 400ms;
+    animation-fill-mode: forwards;*/
 }
 .LILY-Base .main .sub .view .media .cover {
     height: 5.8em;
@@ -155,7 +160,7 @@
     min-width: 5.8em;
     background-position: center;
     background-size: cover;
-    border-radius: 0.92em
+    border-radius: 0.92em;
 }
 .LILY-Base .main .sub .view .media .info {
     overflow: hidden;
@@ -171,6 +176,7 @@
     font-size: 1.36em;
     font-weight: 300;
     margin-top: -0.34em;
+    white-space: nowrap;
 }
 .LILY-Base .main .sub .view .container {
     margin: 2em 2.4em 0px 2.4em;
@@ -185,43 +191,91 @@
     font-family: var(--LILY-LYRICS-FONT);
     font-weight: var(--LILY-LYRICS-WEIGHT);
     text-align: var(--LILY-LYRICS-ALIGN);
-    transition: all 1s;
+    transition: var(--LILY-MAIN-TRANSITIONS);
     padding-bottom: 0.4em;
     line-height: 1.32em;
-}
-.LILY-Base .main .sub .view .container .ly br {
-    color: red;
+    animation-name: fadein;
+    animation-fill-mode: forwards;
+    animation-duration: 480ms;
 }
 
 .LILY-Base .main .sub .view .banner {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
     margin: 2em 2em 0.6em 2em;
     align-items: center;
+    justify-content: center;
     gap: 1em;
     padding: 1em;
     border-radius: 1.8em;
-    color: var(--LILY-INFO-BGCOLOR);
-    transition: all 1s;
+    color: var(--LILY-LYRICS-COLOR);
+    transition: var(--LILY-MAIN-TRANSITIONS);
     flex: 1;
 }
 .LILY-Base .main .sub .view .banner .nolyrics {
-
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 0.8em;
+    margin-bottom: 1.2em;
+    animation-name: fadein;
+    animation-fill-mode: forwards;
+    animation-duration: 680ms;
 }
-.LILY-Base .main .sub .view .banner .svg {
-    height: 2em;
-    width: 2em;
+/* .LILY-Base .internal-style-containercalctopmodules .sub .view .banner, .LILY-Base .internal-style-container .sub .view .banner { background-color: #ffffff10; } */
+.LILY-Base .main .sub .view .banner .nolyrics .icon {
+    display: block;
+    height: 2.6em;
+    width: 2.6em;
+}
+.LILY-Base .main .sub .view .banner .nolyrics .txt {
+    font-weight: 100;
+    font-size: 1.8em;
+}
+
+.LILY-Base .main .sub .view .search {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 2em 2em 0.6em 2em;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em;
+    border-radius: 1.8em;
+    color: var(--LILY-LYRICS-COLOR);
+    transition: var(--LILY-MAIN-TRANSITIONS);
+    flex: 1;
+    overflow: hidden;
+    animation-name: blink;
+    animation-iteration-count: 6;
+    animation-duration: 1320ms;
+    animation-timing-function: cubic-bezier(0.42, 0, 0.93, 0.98);
+}
+.LILY-Base .main .sub .view .search .module {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 0.8em;
+    margin-bottom: 1.2em;
+}
+.LILY-Base .main .sub .view .search .module .icon {
+    display: block;
+    height: 2.6em;
+    width: 2.6em;
+}
+.LILY-Base .main .sub .view .search .module .txt {
+    font-weight: 100;
+    font-size: 1.8em;
 }
 
 /* Optional styles when there is no lyrics */
 .LILY-Base .main .sub .view .extended { flex-flow: column nowrap; padding: 2em 2em 1.8em 2em; align-items: center; margin: 0.6em 2em 2em 2em; text-align: center; }
 .LILY-Base .main .sub .view .extended .cover { height: 8em; min-height: 8em; width: 8em; min-width: 8em; }
-.LILY-Base .main .sub .view .extended .info .subtitle { font-size: 1.66em; }
+.LILY-Base .main .sub .view .extended .info .subtitle { font-size: 1.66em; white-space: nowrap;}
 .LILY-Base .main .sub .view .extended .info .title { font-size: 2.2em; }
 
 .LILY-Base .blob {
-    transition: all 1s;
+    transition: var(--LILY-MAIN-TRANSITIONS);
 }
 .LILY-Base .blob-V {
     background-color: var(--LILY-BLOBS-VIBRANT);
@@ -453,6 +507,7 @@
 .LILY-Base .notice .content .subtitle {
     font-weight: 300;
     margin-top: -0.2em;
+    white-space: nowrap;
 }
 .LILY-Base .notice .content .progress {
     height: 0.24em;
@@ -497,6 +552,8 @@
 /* ANIMATIONS */
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 @keyframes prog { 0% { width: 100%; } 20% { width: 100%; } 88% { width: 0%; } 100% { width: 0%; }}
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.68; } 100% { opacity: 1; } }
+@keyframes slide { from { opacity: 0.3; transform: translateX(3em); } to { opacity: 1; transform: translateX(0em); } }
 
 
 @media (orientation: landscape) {
@@ -509,6 +566,9 @@
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .container .ly {
     font-size: 1.8em;
+    animation-name: fadein;
+    animation-fill-mode: forwards;
+    animation-duration: 480ms;
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .media {
     flex-flow: column nowrap;
@@ -520,6 +580,9 @@
     /* margin: 1.8em 1em 1.8em 1.8em; order: 1; */
     transition: all 1s;
     padding: 2em;
+    /*animation-name: slide;
+    animation-duration: 400ms;
+    animation-fill-mode: forwards;*/
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info {
     flex: none;
@@ -547,6 +610,9 @@
   .LILY-Base .main.internal-sidebyside-normal .sub .view .nolyrics {
     margin: 2em 0em 2em 2.2em;
     background-color: transparent;
+    animation-name: fadein;
+    animation-fill-mode: forwards;
+    animation-duration: 680ms;
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .media .cover {
     height: 18em;
@@ -560,6 +626,7 @@
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info .subtitle {
     font-size: 1.8em;
+    white-space: nowrap;
   }
   .LILY-Base .main.internal-sidebyside-normal .sub .view .media .info .title {
     font-size: 2.36em;

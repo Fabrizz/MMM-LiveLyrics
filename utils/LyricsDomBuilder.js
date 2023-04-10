@@ -52,9 +52,11 @@ class LyricsDomBuilder {
         this.config.lyricsFontSize,
       );
     }
+    if (!this.config.useAnimations)
+      this.root.style.setProperty("--LILY-MAIN-TRANSITIONS", "none");
 
     if (
-      this.config.lyricsStyleTheme === "DynamicblobsFull" &&
+      this.config.lyricsStyleTheme.toLowerCase() === "dynamicblobsfull" &&
       (this.config.lyricsFillType.toLowerCase().includes("calctopmodules") ||
         this.config.lyricsCustomFixedDimentions)
     ) {
@@ -162,9 +164,11 @@ class LyricsDomBuilder {
   }
 
   paint(current, lyrics) {
+    let searchOver = false;
     const wrapper = this.globalWrapper();
     const main = document.createElement("div");
-    const gridOnBackdrop = this.config.lyricsStyleTheme === "DynamicblobsFull";
+    const gridOnBackdrop =
+      this.config.lyricsStyleTheme.toLocaleLowerCase() === "dynamicblobsfull";
     main.classList.add(
       "main",
       this.types.style,
@@ -245,7 +249,7 @@ class LyricsDomBuilder {
     info.appendChild(subtitle);
     media.appendChild(info);
 
-    const container = document.createElement("div");
+    let container = document.createElement("div");
     container.classList.add("container");
     container.id = "LILY-CONTAINER";
     const ly = document.createElement("div");
@@ -262,6 +266,9 @@ class LyricsDomBuilder {
         nolyrics.classList.add("nolyrics");
         const constructor = document.createElement("div");
         constructor.classList.add("banner");
+        const txt = document.createElement("div");
+        txt.classList.add("txt");
+        txt.innerText = this.translate("LYRICS_EMPTY");
 
         const ico = document.createElementNS(
           "http://www.w3.org/2000/svg",
@@ -277,6 +284,7 @@ class LyricsDomBuilder {
         path.setAttribute("d", this.icons.nolyrics);
         ico.appendChild(path);
         nolyrics.appendChild(ico);
+        nolyrics.appendChild(txt);
 
         constructor.appendChild(nolyrics);
         view.appendChild(constructor);
@@ -294,17 +302,37 @@ class LyricsDomBuilder {
       if (current) {
         const search = document.createElement("div");
         search.classList.add("search");
-        search.innerText = current
-          ? current.playerIsEmpty
-            ? "NOTHING PLAYING"
-            : "SEARCHING"
-          : "NOTHING PLAYING";
-        ly.appendChild(search);
+        if (current && !current.playerIsEmpty) {
+          const base = document.createElement("div");
+          base.classList.add("module");
+
+          const ico = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg",
+          );
+          ico.setAttribute("fill", "currentColor");
+          ico.setAttribute("viewBox", "0 0 24 24");
+          ico.classList.add("icon");
+          const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path",
+          );
+          path.setAttribute("d", this.icons.search);
+          ico.appendChild(path);
+
+          base.appendChild(ico);
+          const txt = document.createElement("div");
+          txt.classList.add("txt");
+          txt.innerText = this.translate("LYRICS_SEARCH");
+          base.appendChild(txt);
+          search.appendChild(base);
+        }
+        container = search;
       }
     }
 
     /*view.appendChild(header);*/
-    container.appendChild(ly);
+    if (!searchOver) container.appendChild(ly);
     view.appendChild(container);
     view.appendChild(media);
     blobs.appendChild(grid);
@@ -430,8 +458,6 @@ class LyricsDomBuilder {
     this.lyStatus = false;
   }
 
-  scrollerSetAction() {}
-
   scroller_byAnimationFrame() {
     const updateProgress = (t) => {
       if (!this.lyStatus) return;
@@ -461,46 +487,45 @@ class LyricsDomBuilder {
     scrollEffect(0);
   }
 
-  scroller_bySections() {
-    if (!this.lyStatus) return;
-    const container = document.getElementById(this.LYRICSCONTAINER);
-    const extProgress = document.getElementById(this.PLAYERPROGRESS);
-    if (!extProgress || !container) return;
-    const progress = {
-      now: parseInt(extProgress.getAttribute("now")) ?? 1,
-      max: parseInt(extProgress.getAttribute("max")) ?? 1,
-    };
+  scroller_bySections(tt) {
+    setInterval(() => {
+      if (!this.lyStatus) return;
+      const container = document.getElementById(this.LYRICSCONTAINER);
+      const extProgress = document.getElementById(this.PLAYERPROGRESS);
+      if (!extProgress || !container) return;
+      const progress = {
+        now: parseInt(extProgress.getAttribute("now")) ?? 1,
+        max: parseInt(extProgress.getAttribute("max")) ?? 1,
+      };
 
-    if (
-      container.clientHeight === container.scrollHeight ||
-      container.scrollHeight < container.clientHeight
-    )
-      return;
+      if (
+        container.clientHeight === container.scrollHeight ||
+        container.scrollHeight < container.clientHeight
+      )
+        return;
 
-    const currentProgress = Math.round((progress.now / progress.max) * 100);
-    let changeEvery = Math.round(
-      100 / (container.scrollHeight / container.clientHeight),
-    );
+      const currentProgress = Math.round((progress.now / progress.max) * 100);
+      let changeEvery = Math.round(
+        100 / (container.scrollHeight / container.clientHeight),
+      );
 
-    // NEXT UPDATE: Just calc tha middle of every "lyric fragment" and use it instead of the
-    // direct divison of the max size
+      // NEXT UPDATE: Just calc tha middle of every "lyric fragment" and use it instead of the
+      // direct divison of the max size
 
-    if (changeEvery > 28 || changeEvery > 30) changeEvery = 28;
-    if (changeEvery > 40 || changeEvery > 50) changeEvery = 40;
-    if (changeEvery > 86) changeEvery = 70;
+      if (changeEvery > 28 || changeEvery > 30) changeEvery = 28;
+      if (changeEvery > 40 || changeEvery > 50) changeEvery = 40;
+      if (changeEvery > 86) changeEvery = 70;
 
-    const multiplier = Math.trunc(currentProgress / changeEvery);
-    const numberOfTimes = Math.ceil(100 / changeEvery);
+      const multiplier = Math.trunc(currentProgress / changeEvery);
+      const numberOfTimes = Math.ceil(100 / changeEvery);
 
-    container.scrollTo({
-      top:
-        (Math.round((container.scrollHeight / numberOfTimes) * 10) / 10) *
-        multiplier,
-      behavior: "smooth",
-    });
-
-    console.log(
-      `Sizes: ${container.scrollHeight}/${container.clientHeight}px | Current: ${currentProgress}% [${multiplier}/${numberOfTimes}] (${changeEvery}%)`,
-    );
+      container.scrollTo({
+        top:
+          (Math.round((container.scrollHeight / numberOfTimes) * 10) / 10) *
+          multiplier,
+        behavior: "smooth",
+      });
+      // console.log(`Sizes: ${container.scrollHeight}/${container.clientHeight}px | Current: ${currentProgress}% [${multiplier}/${numberOfTimes}] (${changeEvery}%)`);
+    }, tt);
   }
 }

@@ -190,7 +190,9 @@ module.exports = NodeHelper.create({
   fetchGenius: async function (payload) {
     try {
       // if (payload.cache) return this.sendSocketNotification("LYRICS", this.currentLyrics);
-      let data = payload.cache
+      const cacheExp =
+        payload.cache && this.currentLyrics.title === payload.name;
+      let data = cacheExp
         ? this.currentLyrics
         : await this.fetcher.getLyrics(
             payload.name,
@@ -204,7 +206,7 @@ module.exports = NodeHelper.create({
           ...data,
           empty: false,
           dataType: "LYRICS",
-          isFromCache: payload.cache,
+          isFromCache: cacheExp,
         };
         this.sendSocketNotification("LYRICS", this.currentLyrics);
       }
@@ -212,7 +214,7 @@ module.exports = NodeHelper.create({
         ...data,
         empty: false,
         dataType: "LYRICS",
-        isFromCache: payload.cache,
+        isFromCache: cacheExp,
       });
     } catch (e) {
       console.error(

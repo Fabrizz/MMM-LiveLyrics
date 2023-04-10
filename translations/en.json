@@ -5,6 +5,8 @@
     "ONSPOTIFY_MISMATCH": "OnSpotify needs an update",
     "ONSPOTIFY_UPDATE": "Actual version:",
     "SEARCHING_LYRICS": "Searching lyrics...",
+    "LYRICS_EMPTY": "No lyrics found.",
+    "LYRICS_SEARCH": "Searching for song lyrics...",
     "RESUME": "Resuming module...",
     "SUSPEND": "Suspending module...",
     "DYNAMIC_UNKNOWN": "OnSpotify is not broadcasting color data, make sure to set the config to allow/enable it. (https://github.com/Fabrizz/MMM-OnSpotify)",
