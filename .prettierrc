@@ -1,0 +1,9 @@
+{
+    "useTabs": false,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "proseWrap": "always",
+    "endOfLine": "crlf"
+}
