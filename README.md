@@ -132,6 +132,8 @@ The following code block contains the all the module options:
 
 The remote can be accessed using `<mirror:port>/LiveLyrics`, it gives you an interface to hide/show the module, see the lyrics and a panel to debug the module data flow.
 
+> You might need to set your mirror to allow local connections, you can do this by going to the MagicMirror `config.js` file, and setting the `ipWhitelist` to `[]`. (Allowing any device to connect to the mirror) (If you have static or reserved IPs you can do a per device whitelist)
+
 ### API:
 <img alt="Api, event stream" src=".github/content/banner-api.png" aling="left" height="80%">
 
