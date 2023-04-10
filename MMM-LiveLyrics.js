@@ -15,9 +15,9 @@ Module.register("MMM-LiveLyrics", {
     useDefaultSearchFormatter: true,
     useMultipleArtistInSearch: true,
     startHidden: false,
-    logSuspendResume: true,
-    showConnectionQrOnLoad: false,
-    connectionQrDuration: 5,
+    logSuspendResume: false,
+    showConnectionQrOnLoad: true,
+    connectionQrDuration: 12,
     sideBySideOnLandscape: false,
 
     lyricsFillType: "containerCalcTopModules", // container, full, containerCalcTopModules, fullCalcTopModules
