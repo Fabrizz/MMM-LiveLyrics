@@ -127,11 +127,11 @@ The following code block contains the all the module options:
 | useAnimations | `true` | If the module should use transitions to switch between color palettes and module states. |
 
 # Remote & API:
+<img alt="Remote control" src=".github/content/banner-remote.png" width="150" height="150">
 
-The remote can be accessed using `<mirror:port>/LiveLyrics`, it gives you an interface to hide/show the module, see the lyrics and a panel to debug the module data flow. <img alt="Remote control" src=".github/content/banner-remote.png" aling="right" width="120" height="120" />
+The remote can be accessed using `<mirror:port>/LiveLyrics`, it gives you an interface to hide/show the module, see the lyrics and a panel to debug the module data flow.
 
-
-
+### API:
 <img alt="Api, event stream" src=".github/content/banner-api.png" aling="left" height="80%">
 
 # Custom regex:
