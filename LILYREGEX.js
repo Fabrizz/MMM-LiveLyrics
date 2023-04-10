@@ -10,8 +10,8 @@
  * The example here removes the first part of the lyrics in spanish songs,
  * as they (for some reason) include the name/author at the top.
  *
- * If you want more granular control as well as to blacklist words/urlParams
- * you chould edit utils/LyricsFetcher.js
+ * If you want more granular control (or you want to blacklist words/urlParams)
+ * you can edit the lyrics fetcher. (utils/LyricsFetcher.js)
  */
 
 module.exports = {
