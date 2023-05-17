@@ -231,6 +231,7 @@
 .LILY-Base .main .sub .view .banner .nolyrics .txt {
     font-weight: 100;
     font-size: 1.8em;
+    text-align: center;
 }
 
 .LILY-Base .main .sub .view .search {
@@ -266,6 +267,7 @@
 .LILY-Base .main .sub .view .search .module .txt {
     font-weight: 100;
     font-size: 1.8em;
+    text-align: center;
 }
 
 /* Optional styles when there is no lyrics */
@@ -652,5 +654,31 @@
     "BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB";
     filter: blur(8.8em);
     opacity: 0.42;
+    }
 }
+
+@media (orientation: landscape) and (max-height: 1000px) {
+    .LILY-Base .main.internal-sidebyside-normal .sub .view .container .ly {
+        font-size: 1.32em;
+        line-height: 1.1em;
+    }
+    .LILY-Base .main.internal-sidebyside-normal .sub .view .media {
+        font-size: 0.72em;
+    }
+    .LILY-Base .main.internal-sidebyside-normal .sub .view .media .cover {
+        font-size: 0.9em;
+    }
+    .LILY-Base .main .sub .view .search {
+        font-size: 0.8em;
+    }
+    .LILY-Base .main .sub .view .search,
+    .LILY-Base .main .sub .view .banner .nolyrics {
+        font-size: 0.8em;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 1000px) {
+    .LILY-Base .main.internal-sidebyside-normal .sub .view .media {
+        max-width: 34%;
+    }
 }

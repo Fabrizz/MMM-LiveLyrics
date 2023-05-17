@@ -101,6 +101,8 @@ Module.register("MMM-LiveLyrics", {
     this.helpOverlayTimeout = null;
     this.onSpotifyVersionMismatch = false;
     this.firstSync = this.config.hideSpotifyModule;
+    this.sentData = true;
+    this.externalHidden = false;
 
     /* Idk why using a simple .contains() does not work as its a string, but hey, I want to sleep */
     this.dynamicTheme =
@@ -113,7 +115,7 @@ Module.register("MMM-LiveLyrics", {
     if (this.config.hideStrategy === "mm2") this.config.startHidden = true;
 
     ///////////////////////
-    this.version = "1.0.0";
+    this.version = "1.2.0";
     ///////////////////////
 
     this.config.version = this.version;
@@ -204,20 +206,8 @@ Module.register("MMM-LiveLyrics", {
     this.config.events[notification]?.split(" ").forEach((e) => {
       switch (e) {
         case "NOW_PLAYING":
-          if (payload.playerIsEmpty === true) {
-            if (this.config.hideSpotifyModule && !this.moduleHidden)
-              this.sendNotification("ONSPOTIFY_SHOW");
-            if (this.config.hideStrategy === "mm2") this.hide();
-          }
-          if (
-            payload.playerIsEmpty === false &&
-            (this.moduleHidden || this.firstSync)
-          ) {
-            if (this.config.hideSpotifyModule && this.moduleHidden)
-              this.sendNotification("ONSPOTIFY_HIDE");
-            if (this.config.hideStrategy === "mm2") this.show();
-            this.firstSync = false;
-          }
+          this.nowPlayingData = payload;
+          this.externalModuleHandler(!payload.playerIsEmpty, this.moduleHidden);
 
           payload.playerIsEmpty
             ? (this.nowPlaying = false)
@@ -278,7 +268,7 @@ Module.register("MMM-LiveLyrics", {
           if (
             payload.version &&
             Number(payload.version[0]) <= 2 &&
-            Number(payload.version[3]) <= 2
+            Number(payload.version[2]) <= 2
           )
             this.onSpotifyVersionMismatch = payload.version;
 
@@ -399,7 +389,10 @@ Module.register("MMM-LiveLyrics", {
     });
     this.lyrics = null;
 
-    this.sendNotification("ONSPOTIFY_SHOW");
+    this.externalModuleHandler(
+      this.nowPlayingData ? !this.nowPlayingData.playerIsEmpty : true,
+      true,
+    );
 
     if (this.config.logSuspendResume && !this.firstSuspend)
       console.info(
@@ -441,6 +434,21 @@ Module.register("MMM-LiveLyrics", {
         "background-color:darkcyan;color:black;border-radius:0.4em",
         "",
       );
+  },
+
+  externalModuleHandler(isPlaying, isHidden) {
+    if (!isPlaying) {
+      this.externalHidden ? null : this.sendNotification("ONSPOTIFY_SHOW");
+      this.externalHidden = true;
+    } else {
+      if (isHidden) {
+        this.externalHidden ? null : this.sendNotification("ONSPOTIFY_SHOW");
+        this.externalHidden = true;
+      } else {
+        this.externalHidden ? this.sendNotification("ONSPOTIFY_HIDE") : null;
+        this.externalHidden = false;
+      }
+    }
   },
 
   selectScrollType(name) {

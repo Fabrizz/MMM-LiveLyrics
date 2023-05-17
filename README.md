@@ -66,23 +66,23 @@ The following code block contains the all the module options:
 		connectionQrDuration: 12,
 		sideBySideOnLandscape: false,
 		startHidden: false,
-    	hideSpotifyModule: true,
+		hideSpotifyModule: true,
 		updateTopModulesCalcOnData: true,
 
 		// Lyrics style [See below]
 		lyricsFillType: "containerCalcTopModules",
-    	lyricsContainerBackdropStyle: "black",
-    	lyricsStyleTheme: "dynamicblobsFull",
+		lyricsContainerBackdropStyle: "black",
+		lyricsStyleTheme: "dynamicblobsFull",
 		lyricsFontName: null,
-    	lyricsFontSize: null,
-    	lyricsTextAlign: null,
+		lyricsFontSize: null,
+		lyricsTextAlign: null,
 		lyricsCustomFixedDimentions: false,
 
 		// Scroll and others [See below]
 		scrollStrategy: "bySections",
-    	scrollUpdateEvery: 3,
-    	hideStrategy: "flex",
-    	blurToBlackOnFull: false,
+		scrollUpdateEvery: 3,
+		hideStrategy: "flex",
+		blurToBlackOnFull: false,
 		useAnimations: true,
 	}
 }
