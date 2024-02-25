@@ -332,6 +332,7 @@ Module.register("MMM-LiveLyrics", {
           setTimeout(() => this.builder.getTopModulesHeight(), 2000);
           break;
         case "SERVERSIDE_RESTART":
+          this.hide();
           this.sendSocketNotification("SET_CREDENTIALS", {
             apiKey: this.config.accessToken,
             useMultipleArtists: this.config.useMultipleArtistInSearch,
