@@ -79,6 +79,7 @@ Module.register("MMM-LiveLyrics", {
       LIVELYRICS_GET: "LIVELYRICS_GET",
       ALL_MODULES_STARTED: "ALL_MODULES_STARTED",
       DOM_OBJECTS_CREATED: "DOM_OBJECTS_CREATED",
+      SERVERSIDE_RESTART: "SERVERSIDE_RESTART",
     },
   },
 
@@ -115,7 +116,7 @@ Module.register("MMM-LiveLyrics", {
     if (this.config.hideStrategy === "mm2") this.config.startHidden = true;
 
     ///////////////////////
-    this.version = "1.2.0";
+    this.version = "1.2.1";
     ///////////////////////
 
     this.config.version = this.version;
@@ -274,8 +275,9 @@ Module.register("MMM-LiveLyrics", {
 
           if (this.dynamicTheme && !payload.directColorData) {
             console.warn(
-              "%c· MMM-LiveLyrics %c %c[WARN]%c " +
-                this.translate("DYNAMIC_UNKNOWN"),
+              `%c· MMM-LiveLyrics %c %c[WARN]%c ${this.translate(
+                "DYNAMIC_UNKNOWN",
+              )}`,
               `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
               "",
               "background-color:orange;color:black;border-radius:0.4em",
@@ -328,6 +330,15 @@ Module.register("MMM-LiveLyrics", {
           break;
         case "DOM_OBJECTS_CREATED":
           setTimeout(() => this.builder.getTopModulesHeight(), 2000);
+          break;
+        case "SERVERSIDE_RESTART":
+          this.sendSocketNotification("SET_CREDENTIALS", {
+            apiKey: this.config.accessToken,
+            useMultipleArtists: this.config.useMultipleArtistInSearch,
+            useFormatter: this.config.useDefaultSearchFormatter,
+            startHidden: this.config.startHidden,
+            hidesAutomatically: this.config.hideStrategy,
+          });
           break;
         default:
           break;
@@ -396,7 +407,7 @@ Module.register("MMM-LiveLyrics", {
 
     if (this.config.logSuspendResume && !this.firstSuspend)
       console.info(
-        "%c· MMM-LiveLyrics %c %c[INFO]%c " + this.translate("SUSPEND"),
+        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate("SUSPEND")}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
         "background-color:darkcyan;color:black;border-radius:0.4em",
@@ -405,8 +416,9 @@ Module.register("MMM-LiveLyrics", {
 
     if (this.firstSuspend) {
       console.info(
-        "%c· MMM-LiveLyrics %c %c[INFO]%c " +
-          this.translate("STARTS_SUSPENDED"),
+        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate(
+          "STARTS_SUSPENDED",
+        )}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
         "background-color:darkcyan;color:black;border-radius:0.4em",
@@ -428,7 +440,7 @@ Module.register("MMM-LiveLyrics", {
 
     if (this.config.logSuspendResume)
       console.info(
-        "%c· MMM-LiveLyrics %c %c[INFO]%c " + this.translate("RESUME"),
+        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate("RESUME")}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
         "background-color:darkcyan;color:black;border-radius:0.4em",
@@ -452,6 +464,7 @@ Module.register("MMM-LiveLyrics", {
   },
 
   selectScrollType(name) {
+    // eslint-disable-next-line no-param-reassign
     if (typeof name !== "string") name = "";
     switch (name.toLowerCase()) {
       case "byanimationframe":
