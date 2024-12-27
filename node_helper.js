@@ -14,7 +14,9 @@ const os = require("os");
 
 module.exports = NodeHelper.create({
   start: function () {
-    console.log("\x1b[46m%s\x1b[0m", "[Node Helper] Init >> " + this.name);
+    console.log(
+      "[\x1b[35mMMM-LiveLyrics\x1b[0m] by Fabrizz >> Node helper loaded.",
+    );
     this.fetcher = null;
     this.frontendAvailable = false;
     this.serverData = null;
