@@ -116,7 +116,7 @@ Module.register("MMM-LiveLyrics", {
     if (this.config.hideStrategy === "mm2") this.config.startHidden = true;
 
     ///////////////////////
-    this.version = "1.2.1";
+    this.version = "1.3.0";
     ///////////////////////
 
     this.config.version = this.version;
