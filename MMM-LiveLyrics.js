@@ -132,6 +132,7 @@ Module.register("MMM-LiveLyrics", {
       useFormatter: this.config.useDefaultSearchFormatter,
       startHidden: this.config.startHidden,
       hidesAutomatically: this.config.hideStrategy,
+      lang: this.config.language ? this.config.language : "en-US",
     });
 
     this.sendSocketNotification("GET_SERVER", {
@@ -234,24 +235,29 @@ Module.register("MMM-LiveLyrics", {
           if (this.config.updateTopModulesCalcOnData)
             this.builder.getTopModulesHeight();
           break;
-        case "LYRICS_TOGGLE":
-          this.moduleHidden ? this.show() : this.hide();
-          break;
         case "LYRICS_SHOW":
+          this.sendNotification("LYRICS_STATUS", {
+            type: "external",
+            show: true,
+          });
           this.show();
           break;
         case "LYRICS_HIDE":
+          this.sendNotification("LYRICS_STATUS", {
+            type: "external",
+            show: false,
+          });
           this.hide();
           break;
         case "ONSPOTIFY_NOTICE":
           this.masterFound = true;
           this.enable = true;
           console.info(
-            "%c· MMM-LiveLyrics %c %c[INFO]%c " +
+            "%c· MMM-LiveLyrics %c %c INFO %c " +
               `${this.translate("ONSPOTIFY_FOUND")} | V${payload.version}`,
             `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
             "",
-            "background-color:darkcyan;color:black;border-radius:0.4em",
+            "background-color:#02675d;color:white;",
             "",
           );
           this.moduleHidden
@@ -378,12 +384,32 @@ Module.register("MMM-LiveLyrics", {
       case "SET":
         switch (payload) {
           case "TOGGLE":
-            this.moduleHidden ? this.userShow() : this.userHide();
+            if (this.moduleHidden) {
+              this.sendNotification("LYRICS_STATUS", {
+                type: "internal",
+                show: true,
+              });
+              this.userShow();
+            } else {
+              this.sendNotification("LYRICS_STATUS", {
+                type: "internal",
+                show: false,
+              });
+              this.userHide();
+            }
             break;
           case "SHOW":
+            this.sendNotification("LYRICS_STATUS", {
+              type: "internal",
+              show: true,
+            });
             this.userShow();
             break;
           case "HIDE":
+            this.sendNotification("LYRICS_STATUS", {
+              type: "internal",
+              show: false,
+            });
             this.userHide();
             break;
           default:
@@ -408,21 +434,21 @@ Module.register("MMM-LiveLyrics", {
 
     if (this.config.logSuspendResume && !this.firstSuspend)
       console.info(
-        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate("SUSPEND")}`,
+        `%c· MMM-LiveLyrics %c %c INFO %c ${this.translate("SUSPEND")}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
-        "background-color:darkcyan;color:black;border-radius:0.4em",
+        "background-color:#02675d;color:white;",
         "",
       );
 
     if (this.firstSuspend) {
       console.info(
-        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate(
+        `%c· MMM-LiveLyrics %c %c INFO %c ${this.translate(
           "STARTS_SUSPENDED",
         )}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
-        "background-color:darkcyan;color:black;border-radius:0.4em",
+        "background-color:#02675d;color:white;",
         "",
       );
       this.firstSuspend = false;
@@ -441,10 +467,10 @@ Module.register("MMM-LiveLyrics", {
 
     if (this.config.logSuspendResume)
       console.info(
-        `%c· MMM-LiveLyrics %c %c[INFO]%c ${this.translate("RESUME")}`,
+        `%c· MMM-LiveLyrics %c %c INFO %c ${this.translate("RESUME")}`,
         `background-color:${this.moduleColor};color:black;border-radius:0.4em`,
         "",
-        "background-color:darkcyan;color:black;border-radius:0.4em",
+        "background-color:#02675d;color:white;",
         "",
       );
   },

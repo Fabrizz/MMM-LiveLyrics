@@ -5,11 +5,13 @@
  * By Fabrizz <3 | https://github.com/Fabrizz/MMM-LiveLyrics
  *
  * Inspired by Faisal Arshed https://github.com/farshed
+ * 
+ * This is not the best code! This module is old and needs a refactor.
+ * Also web scrapping is not the best but hey, it still works after 2 years.
  */
 
-// Use node fetch as most MM2 installs use older node
-const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const fetch = require("node-fetch");
 const LILYREGEX = require("../LILYREGEX");
 
 const baseApiURL = "https://api.genius.com";
@@ -18,9 +20,10 @@ const queryRegex =
 
 /* TODO: Update regex to take in mind letter only titles (512) */
 
-module.exports = class SpotifyFetcher {
+module.exports = class LyricsFetcher {
   constructor(payload) {
     this.apiKey = payload.apiKey;
+    this.lang = payload.lang;
     this.regex = LILYREGEX;
 
     this.userRegex =
@@ -34,12 +37,12 @@ module.exports = class SpotifyFetcher {
     if (payload.userRegex && !(this.userRegex instanceof RegExp))
       console.error(
         "\x1b[41m%s\x1b[0m",
-        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
+        "[MMM-LiveLyrics] [Node Helper] RegexChecker >> Malformed RegExp user input.",
       );
     if (payload.userRegexlyrics && !(this.userRegexlyrics instanceof RegExp))
       console.error(
         "\x1b[41m%s\x1b[0m",
-        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
+        "[MMM-LiveLyrics] [Node Helper] RegexChecker >> Malformed RegExp user input.",
       );
   }
 
@@ -100,20 +103,39 @@ module.exports = class SpotifyFetcher {
 
       const ly = await this.fetchLyrics(final.result.url);
       const $ = cheerio.load(ly);
-      let lyrics = $('div[class="lyrics"]').text().trim();
-      if (!lyrics) {
-        lyrics = "";
-        $('div[class^="Lyrics__Container"]').each((i, elem) => {
-          if ($(elem).text().length !== 0) {
-            let snippet = $(elem)
-              .html()
-              .replace(/<br>/g, "\n")
-              .replace(/<(?!\s*br\s*\/?)[^>]+>/gi, "");
-            lyrics += $("<textarea/>").html(snippet).text().trim() + "\n\n";
-          }
+
+      let lyrics = "";
+      let $lyrics = $('div[id="lyrics-root"]').text().trim();
+
+      if ($lyrics) {
+        $('div[data-lyrics-container="true"]').each((i, e) => {
+          const lyn = 
+          $('<div>')
+            .html($(e)
+                .html()
+                .replace(/<br\s*\/?>/g, "\n")
+                .replace(/<(?!\s*br\s*\/?)[^>]+>/gi, "")
+              )
+            .text()
+            .trim();
+          
+          lyrics += lyn + "\n\n";
         });
+
+        // Genius changed their layout
+        // lyrics = "";
+        // $('div[class^="Lyrics__Container"]').each((i, elem) => {
+        //   if ($(elem).text().length !== 0) {
+        //     let snippet = $(elem)
+        //       .html()
+        //       .replace(/<br>/g, "\n")
+        //       .replace(/<(?!\s*br\s*\/?)[^>]+>/gi, "");
+        //     lyrics += $("<textarea/>").html(snippet).text().trim() + "\n\n";
+        //   }
+        // });
+        
       }
-      lyrics ? (lyrics = lyrics.trim()) : (lyrics = null);
+      lyrics.length > 1 ? (lyrics = lyrics.trim()) : (lyrics = null);
 
       if (this.userRegexlyrics && lyrics)
         lyrics = lyrics.replace(this.userRegexlyrics, "");
@@ -132,12 +154,17 @@ module.exports = class SpotifyFetcher {
     } catch (error) {
       console.error(
         "\x1b[41m%s\x1b[0m",
-        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> Malformed RegExp user input.",
+        "[MMM-LiveLyrics] [Node Helper] LyricsProcess >> Could be: Malformed RegExp user input.",
         error,
       );
     }
   }
 
+  /**
+   * @param {string} title
+   * @param {string} artists
+   * @returns
+   * */
   getQuery(title, artists) {
     if (!title && !artists) return null;
     const arts = artists.split(",").map((a) => a.trim());
@@ -158,6 +185,10 @@ module.exports = class SpotifyFetcher {
     return query;
   }
 
+  /**
+   * @param {string} query
+   * @returns
+   * */
   searchSong(query) {
     return fetch(
       new URL(
@@ -175,14 +206,24 @@ module.exports = class SpotifyFetcher {
       });
   }
 
-  fetchLyrics(url) {
-    return fetch(url, {
-      method: "GET",
-      referrerPolicy: "no-referrer",
-    })
-      .then((response) => response.text())
-      .catch((error) => {
-        console.log(error);
+  /**
+   * @param {string} url
+   * @returns
+   * */
+  async fetchLyrics(url) {
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Accept-Language": `${this.lang};q=0.9,en-US,en;q=0.8`,
+        },
       });
+      return await await response.text();
+    } catch (error) {
+      return console.error(
+        "\x1b[41m%s\x1b[0m",
+        "[MMM-LiveLyrics] [Node Helper] LyricsFetcher >> ",
+        error);
+    }
   }
 };
