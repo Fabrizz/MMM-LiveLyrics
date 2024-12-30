@@ -480,7 +480,7 @@ Module.register("MMM-LiveLyrics", {
       this.externalHidden ? null : this.sendNotification("ONSPOTIFY_SHOW");
       this.externalHidden = true;
     } else {
-      if (isHidden) {
+      if (isHidden || !this.config.hideSpotifyModule) {
         this.externalHidden ? null : this.sendNotification("ONSPOTIFY_SHOW");
         this.externalHidden = true;
       } else {
